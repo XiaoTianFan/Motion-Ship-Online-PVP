@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.0/addons/p5.sound.min.js"></script>
+    
+    <script src="https://unpkg.com/ml5@1/dist/ml5.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <main>
+    </main>
+    <script src="src/utilities/CollisionDetector.js"></script>
+    <script src="src/utilities/FaceTracker.js"></script>
+    <script src="src/utilities/AssetLoader.js"></script>
+    <script src="src/utilities/DataManager.js"></script>
+    <script src="src/utilities/SoundManager.js"></script>
+    <script src="src/utilities/GlobalNotification.js"></script>
+
+    <script src="src/classes/LaserBeam.js"></script>
+    <script src="src/classes/Player.js"></script>
+    <script src="src/classes/EnemyShip.js"></script>
+    <script src="src/classes/EnemyLaser.js"></script>
+    <script src="src/classes/Meteoroid.js"></script>
+    <script src="src/classes/EnergyOre.js"></script>
+    <script src="src/classes/Background.js"></script>
+    <script src="src/classes/SpaceDust.js"></script>
+
+    <script src="src/components/StartScreen.js"></script>
+    <script src="src/components/ConfigMenu.js"></script>
+    <script src="src/components/EndScreen.js"></script>
+    <script src="src/components/HUD.js"></script>
+    <script src="src/components/Gameplay.js"></script>
+    <script src="src/components/Instruction.js"></script>
+    <script src="src/components/WaitForPlayer.js"></script>
+    <script src="src/components/ControlModeSelect.js"></script>
+
+    <script src="src/controllers/GameStateManager.js"></script>
+    <script src="src/controllers/ObjectSpawner.js"></script>
+    
+    <script src="sketch.js"></script>
+  </body>
+</html>
