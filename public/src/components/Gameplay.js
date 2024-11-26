@@ -1,3 +1,5 @@
+// Gameplay.js
+
 class Gameplay {
   // Manages the main gameplay loop, handling player actions, object interactions, and game logic.
   constructor() {
@@ -12,11 +14,19 @@ class Gameplay {
     // Reset game result
     game.gameWL = null;
 
-    // Initialize player with selected spaceship
+    // Initialize player with selected spaceship 
     let selectedShip = configMenu.selectedShip || 'playerShip1';
     let playerModel = assets.models[selectedShip];
     let playerTexture = assets.textures[selectedShip];
-    game.player = new Player(playerModel, playerTexture);
+    // And based on control mode
+    if (game.controlMode === 'Humanity' || game.controlMode === 'Android' ) {
+      game.player = new Player(playerModel, playerTexture);
+    } else if (game.controlMode === 'Robot') {
+      // Set default difficulty and behavior priority
+      let difficulty = 5; // Example default
+      let behaviorPriority = 'attack'; // 'survival' or 'attack'
+      game.player = new ComputerPlayer(playerModel, playerTexture, difficulty, behaviorPriority);
+    }
 
     // initialize enemy
     let enemyShipModel = globalBroadcastGet.modelSelected;
@@ -104,7 +114,7 @@ class Gameplay {
 
       // Updart background
       this.background.update(headPos.x, headPos.y);
-    } else if (game.controlMode === 'Robot') {
+    } else if (game.controlMode === 'Android') {
       if (keyIsPressed && key === 'w') {
         game.cursor.y -= 0.015
       } else if (keyIsPressed && key === 's') {
@@ -115,24 +125,54 @@ class Gameplay {
         game.cursor.x += 0.015
       }
 
-      game.cursor.x = constrain(game.cursor.x, -0.5, 0.5);
-      game.cursor.y = constrain(game.cursor.y, -0.5, 0.5);
+      game.cursor.x = constrain(game.cursor.x, -0.25, 0.25);
+      game.cursor.y = constrain(game.cursor.y, -0.25, 0.25);
       game.player.update(game.cursor);
 
       console.log(game.cursor);
 
       // Updart background
       this.background.update(game.cursor.x, game.cursor.y);
+    } else if (game.controlMode === 'Robot') {
+      // Reset AI key presses each frame
+      this.resetAIKeys();
+
+      // Update AI player
+      if (game.player instanceof ComputerPlayer) {
+        game.player.updateAI();
+      }
+
+      // Apply AI key presses to movement
+      this.handleAIKeyPresses();
+
+      this.background.update(game.player.x, game.player.y);
     }
     
     // Update event log
     this.logConstrain();
-
     // Handle sound-triggered laser firing
-    if (keyIsPressed && game.player.canFire() && key === ' ') {
-      let laser = game.player.fireLaser();
-      if (laser) {
-        game.laserBeams.push(laser);
+    if (game.controlMode === 'Humanity' || game.controlMode === 'Android') {
+      // Handle sound-triggered laser firing
+      if (keyIsPressed && game.player.canFire() && key === ' ') {
+        let laser = game.player.fireLaser();
+        if (laser) {
+          game.laserBeams.push(laser);
+        }
+      }
+    } else if (game.controlMode === 'Robot') {
+      // Handle laser firing based on AI key press
+      if (game.aiKeysPressed.space && game.player.canFire()) {
+        let laser = game.player.fireLaser();
+        if (laser) {
+          game.laserBeams.push(laser);
+        }
+        game.aiKeysPressed.space = false; // Reset after firing
+      }
+
+      // Handle tactic engine activation based on AI key press
+      if (game.aiKeysPressed.x) {
+        game.player.tacticEngine();
+        game.aiKeysPressed.x = false; // Reset after activation
       }
     }
     
@@ -217,5 +257,38 @@ class Gameplay {
     } else if (input === 'X' || input === 'x') {
       game.player.tacticEngine();
     }
+  }
+
+  resetAIKeys() {
+    // Reset AI key presses at the start of each frame
+    game.aiKeysPressed.w = false;
+    game.aiKeysPressed.a = false;
+    game.aiKeysPressed.s = false;
+    game.aiKeysPressed.d = false;
+    game.aiKeysPressed.space = false;
+    game.aiKeysPressed.x = false;
+  }
+
+  handleAIKeyPresses() {
+    // Simulate key presses based on AI input
+    if (game.aiKeysPressed.w) {
+      game.cursor.y -= 0.015;
+    }
+    if (game.aiKeysPressed.s) {
+      game.cursor.y += 0.015;
+    }
+    if (game.aiKeysPressed.a) {
+      game.cursor.x -= 0.015;
+    }
+    if (game.aiKeysPressed.d) {
+      game.cursor.x += 0.015;
+    }
+
+    // Constrain cursor within bounds
+    game.cursor.x = constrain(game.cursor.x, -0.3, 0.3);
+    game.cursor.y = constrain(game.cursor.y, -0.3, 0.3);
+
+    // Update player position based on new cursor
+    game.player.update(game.cursor);
   }
 }

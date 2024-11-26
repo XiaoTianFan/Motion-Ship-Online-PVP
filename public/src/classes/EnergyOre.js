@@ -8,7 +8,7 @@ class EnergyOre {
     this.size = random(30, 180); // Size variation
     this.colliderRadius = 90 * this.size / 120;
     this.seed = random();
-    this.health = this.size / 5; // Health proportional to size
+    this.health = this.size / 10; // Health proportional to size
     this.state = null;
   }
 

@@ -5,6 +5,13 @@ class Instruction {
 
   init() {
     game.instructionShowed = true;
+    if (game.controlMode === 'Humanity') {
+      this.instructions = "=========CENTER YOUR FACE=========\n\nCommands\n\nHead Motion : Spaceship Direction\nSPACE : Fire Laser\nX : Tactic Engine (One Time)\nQ : Quit Current Mission\n\n\nGame Objective\n\n1. Destroy Any Obstacles\n2. Avoid Clashing With Them\n\n\nPress SPACE To Start";
+    } else if (game.controlMode === 'Android') {
+      this.instructions = "==========KNOW YOUR KEYS==========\n\nCommands\n\nW/A/S/D : Spaceship Direction\nSPACE : Fire Laser\nX : Tactic Engine (One Time)\nQ : Quit Current Mission\n\n\nGame Objective\n\n1. Destroy Any Obstacles\n2. Avoid Clashing With Them\n\n\nPress SPACE To Start";
+    } else {
+      this.instructions = "=========ARE YOU A ROBOT=========\n\=========ARE YOU A ROBOT=========\n\n=========ARE YOU A ROBOT=========\n=========ARE YOU A ROBOT=========\n=========ARE YOU A ROBOT=========\n=========ARE YOU A ROBOT=========\n\n\n=========ARE YOU A ROBOT=========\n\n=========ARE YOU A ROBOT=========\n=========ARE YOU A ROBOT=========\n\n\n=========ARE YOU A ROBOT=========";
+    }
   }
 
   update() {

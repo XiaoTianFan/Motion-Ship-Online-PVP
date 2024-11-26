@@ -10,8 +10,8 @@ node server.js
 choco install mkcert
 mkcert -install
 mkcert <your_local_IP> localhost 127.0.0.1 ::1
-mv 192.168.1.10+2.pem server.pem
-mv 192.168.1.10+2-key.pem server-key.pem
+mv <localIP>+2.pem server.pem
+mv <localIP>+2-key.pem server-key.pem
 mkdir certs
 mv server.pem certs/
 mv server-key.pem certs/

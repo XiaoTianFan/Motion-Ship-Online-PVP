@@ -17,6 +17,7 @@ let gamingZone = {
   width: 0,
   height: 0
 };
+let fingerPosition;
 
 // A global game object to track overall game state and instances
 let game = {
@@ -34,7 +35,15 @@ let game = {
   instructionShowed: false,
   gameWL: null,
   controlMode: 'Humanity',
-  cursor: {x: 0, y:0}
+  cursor: {x: 0, y:0},
+  aiKeysPressed: {
+    w: false,
+    a: false,
+    s: false,
+    d: false,
+    space: false,
+    x: false
+  }
 };
 
 // The global broadcast dicitonaires to communicate with the other player
@@ -233,6 +242,8 @@ function keyPressed() {
       gameStateManager.handleInput('A');
     } else if (key === 'b') {
       gameStateManager.handleInput('B');
+    } else if (key === 'c') {
+      gameStateManager.handleInput('C');
     } else if (key === ' ') {
       gameStateManager.handleInput(' ');
     }
@@ -305,6 +316,31 @@ function sendBroadcast() {
   // Send the entire dictionary to the server to broadcast to other clients
   socket.emit('broadcast', BroadcastSend);
   // console.log('Sent broadcast:', BroadcastSend);
+}
+
+function readSerial(data) {
+  ////////////////////////////////////
+  //READ FROM ARDUINO HERE
+  ////////////////////////////////////
+
+  if (data != null) {
+    // make sure there is actually a message
+    
+    // split the message
+    let fromArduino = split(trim(data), ","); 
+    
+    // if the right length, then proceed
+    if (fromArduino.length == 1) {
+      // convert it to a number by using int()
+      rVal = int(fromArduino[0]);
+    }
+
+    //////////////////////////////////
+    //SEND TO ARDUINO HERE (handshake)
+    //////////////////////////////////
+    let sendToArduino = fingerPosition+'\n';
+    writeSerial(sendToArduino);
+  }
 }
 
 // Callback function for when faceMesh outputs data

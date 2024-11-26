@@ -1,3 +1,5 @@
+// Player.js
+
 class Player {
   constructor(model, texture) { 
     this.model = model;

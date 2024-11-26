@@ -31,7 +31,7 @@ class LaserBeam {
     for (let obj of [...objects, enemy]) {
       if (CollisionDetector.checkSphereCollision(this, obj)) {
         // Apply damage to the object
-        let destroyed = obj.takeDamage(10); // damage value
+        let destroyed = obj.takeDamage(5); // damage value
         if (destroyed) {
           // Increase score based on object type
           if (obj instanceof EnemyShip) {

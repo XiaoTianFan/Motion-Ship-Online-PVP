@@ -8,7 +8,7 @@ class Meteoroid {
     this.size = random(30, 200); // Size variation
     this.colliderRadius = 90 * this.size / 120;
     this.seed = random();
-    this.health = this.size / 10; // Health proportional to size
+    this.health = this.size / 15; // Health proportional to size
     this.state = null;
     
     /*

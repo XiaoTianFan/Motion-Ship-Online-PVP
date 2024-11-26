@@ -35,17 +35,19 @@ class ControlModeSelect {
       textFont(assets.fonts.ps2p);
       fill(255);
       textSize(windowWidth / 32);
-      text("Select Your Control Mode", 0, -height / 30 * 4);
+      text("Select Your Control Mode", 0, height / 30 * -4);
       textSize(windowWidth / 46);
       // Display control options
       fill(game.controlMode === 'Humanity' ? 'yellow' : 'white');
       text("A. Humanity", 0, height / 30 * -2);
+      fill(game.controlMode === 'Android' ? 'yellow' : 'white');
+      text("B.  Android", 0, height / 30 * 0);
       fill(game.controlMode === 'Robot' ? 'yellow' : 'white');
-      text("B.   Robot", 0, height / 30 * 0);
+      text("C.   Robot", 0, height / 30 * 2);
 
       fill(255);
       textSize(windowWidth / 48);
-      text("Press SPACE To Config Your Mission", 0, height / 30 * 2);
+      text("Press SPACE To Config Your Mission", 0, height / 30 * 4);
       pop();
     }
   
@@ -53,7 +55,15 @@ class ControlModeSelect {
       if (input === 'A') {
         game.controlMode = 'Humanity';
       } else if (input === 'B') {
+        game.controlMode = 'Android';
+      } else if (input === 'C') {
         game.controlMode = 'Robot';
+        try {
+          // setUpSerial();
+        } catch (error) {
+          console.error("An error occurred setting up serial communication:", error);
+        }
+        
       } else if (input === ' ') {
         gameStateManager.changeState('ConfigMenu');
         globalBroadcastSend = {
