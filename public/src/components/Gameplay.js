@@ -18,6 +18,7 @@ class Gameplay {
     let selectedShip = configMenu.selectedShip || 'playerShip1';
     let playerModel = assets.models[selectedShip];
     let playerTexture = assets.textures[selectedShip];
+
     // And based on control mode
     if (game.controlMode === 'Humanity' || game.controlMode === 'Android' ) {
       game.player = new Player(playerModel, playerTexture);
@@ -134,8 +135,7 @@ class Gameplay {
       // Updart background
       this.background.update(game.cursor.x, game.cursor.y);
     } else if (game.controlMode === 'Robot') {
-      // Reset AI key presses each frame
-      this.resetAIKeys();
+      
 
       // Update AI player
       if (game.player instanceof ComputerPlayer) {
@@ -145,11 +145,10 @@ class Gameplay {
       // Apply AI key presses to movement
       this.handleAIKeyPresses();
 
-      this.background.update(game.player.x, game.player.y);
+      // Updart background
+      this.background.update(game.cursor.x, game.cursor.y);
     }
     
-    // Update event log
-    this.logConstrain();
     // Handle sound-triggered laser firing
     if (game.controlMode === 'Humanity' || game.controlMode === 'Android') {
       // Handle sound-triggered laser firing
@@ -202,6 +201,14 @@ class Gameplay {
     // Update objects
     objectSpawner.update();
     objectSpawner.checkCollisions();
+
+    // Update event log
+    this.logConstrain();
+
+    if (game.controlMode === 'Robot') {
+      // Reset AI key presses each frame
+      this.resetAIKeys();
+    }
 
     // Update score based on ranning time
     if (frameCount % 10 == 0) {
@@ -272,16 +279,16 @@ class Gameplay {
   handleAIKeyPresses() {
     // Simulate key presses based on AI input
     if (game.aiKeysPressed.w) {
-      game.cursor.y -= 0.015;
+      game.cursor.y -= 0.1;
     }
     if (game.aiKeysPressed.s) {
-      game.cursor.y += 0.015;
+      game.cursor.y += 0.1;
     }
     if (game.aiKeysPressed.a) {
-      game.cursor.x -= 0.015;
+      game.cursor.x -= 0.1;
     }
     if (game.aiKeysPressed.d) {
-      game.cursor.x += 0.015;
+      game.cursor.x += 0.1;
     }
 
     // Constrain cursor within bounds

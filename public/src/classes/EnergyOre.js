@@ -2,6 +2,7 @@ class EnergyOre {
   constructor(model, texture) {
     this.model = model;
     this.texture = texture;
+    this.type = 'energyOre';
     this.x = random(-gamingZone.width / 3, gamingZone.width / 3);
     this.y = random(-gamingZone.height / 3, gamingZone.height / 3);
     this.z = random(-5000, -5400); // Start off-screen
