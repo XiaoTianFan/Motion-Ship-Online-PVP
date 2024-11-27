@@ -14,7 +14,7 @@ class ComputerPlayer extends Player {
   
     updateAI() {
       this.enemy = game.enemy; 
-      
+
       const currentTime = millis();
       if (currentTime - this.lastActionTime > this.actionCooldown) {
         console.log(`[AI][${this.behaviorPriority.toUpperCase()}] Deciding next action...`);
@@ -86,37 +86,45 @@ class ComputerPlayer extends Player {
   
     decideAttackActions() {
       console.log(`[AI][ATTACK] Assessing attack strategies...`);
+
       // 1. Detect and handle threats
       let threats = this.detectThreats();
       if (threats.hasThreats) {
         console.log(`[AI][ATTACK] Threats detected: ${threats.allThreats.length} threats.`);
+        
         if (threats.hasCriticalObjectThreat) {
           console.log(`[AI][ATTACK] Critical object threat detected. Attempting to destroy it.`);
           this.queueAction('fireAt', threats.criticalObject);
         }
+        
         // Evade all detected threats
         let evadeDirection = this.calculateEvasionDirection(threats.allThreats);
         console.log(`[AI][ATTACK] Evasion direction: ${JSON.stringify(evadeDirection)}`);
         this.queueMovement(evadeDirection);
+      
       } else {
         console.log(`[AI][ATTACK] No immediate threats detected.`);
         // 2. No immediate threats
-        if (this.energy < 30) {
+        if ((this.energy < 30) && (this.enemy.health > 15)) {
           console.log(`[AI][ATTACK] Energy low (${this.energy.toFixed(2)}). Seeking energy ore.`);
+          
           // Move towards the closest energyOre to gain energy
           let closestEnergyOre = this.findClosestEnergyOre();
           if (closestEnergyOre) {
             console.log(`[AI][ATTACK] Closest energy ore at (${closestEnergyOre.x}, ${closestEnergyOre.y}). Moving towards it.`);
+            
             this.moveTowardsObject(closestEnergyOre);
             this.queueAction('fireAt', closestEnergyOre); // Attempt to destroy it to collect energy
           } else {
             console.log(`[AI][ATTACK] No energy ore found. Proceeding to attack.`);
+            
             // Move towards the enemy and attack
             this.moveTowardsEnemy();
             this.queueAction('fireAt', this.enemy);
           }
         } else {
           console.log(`[AI][ATTACK] Energy healthy (${this.energy.toFixed(2)}). Moving towards enemy to attack.`);
+          
           // Move towards the enemy and attack
           this.moveTowardsEnemy();
           this.queueAction('fireAt', this.enemy);
@@ -135,23 +143,18 @@ class ComputerPlayer extends Player {
         let action = this.actionQueue.shift();
         switch (action.type) {
           case 'move':
-            console.log(`[AI][ACTION] Simulating movement: ${JSON.stringify(action.direction)} for ${action.duration}ms.`);
             this.simulateMovement(action.direction, action.duration);
             break;
           case 'fire':
-            console.log(`[AI][ACTION] Simulating fire action.`);
             this.simulateFire();
             break;
           case 'fireAt':
-            console.log(`[AI][ACTION] Simulating fire at target: ${action.target.type} at (${action.target.x}, ${action.target.y}).`);
             this.simulateFireAt(action.target);
             break;
           case 'activateTacticEngine':
-            console.log(`[AI][ACTION] Simulating tactic engine activation.`);
             this.simulateTacticEngine();
             break;
           default:
-            console.log(`[AI][ACTION] Unknown action type: ${action.type}`);
             break;
         }
       }
@@ -202,16 +205,16 @@ class ComputerPlayer extends Player {
     }
   
     queueMovement(direction) {
-      console.log(`[AI][QUEUE] Queuing movement: ${JSON.stringify(direction)}.`);
+      // console.log(`[AI][QUEUE] Queuing movement: ${JSON.stringify(direction)}.`);
       this.actionQueue.push({ type: 'move', direction: direction, duration: 500 });
     }
   
     queueAction(actionType, target = null) {
       if (actionType === 'fireAt' && target) {
-        console.log(`[AI][QUEUE] Queuing fireAt action for target: ${target.type} at (${target.x}, ${target.y}).`);
+        // console.log(`[AI][QUEUE] Queuing fireAt action for target: ${target.type} at (${target.x}, ${target.y}).`);
         this.actionQueue.push({ type: actionType, target: target });
       } else {
-        console.log(`[AI][QUEUE] Queuing action: ${actionType}.`);
+        // console.log(`[AI][QUEUE] Queuing action: ${actionType}.`);
         this.actionQueue.push({ type: actionType });
       }
     }
@@ -221,8 +224,8 @@ class ComputerPlayer extends Player {
       let criticalObjectThreat = null;
       let allThreats = [];
   
-      const laserThreatRange = 150 * this.difficulty; // Adjustable based on difficulty
-      const objectThreatRange = 200 * this.difficulty; // Larger range for objects
+      const laserThreatRange = 5 * this.difficulty; // Adjustable based on difficulty
+      const objectThreatRange = 10 * this.difficulty; // Larger range for objects
   
       // Detect laser threats
       for (let laser of game.enemyLaser) {
@@ -230,7 +233,7 @@ class ComputerPlayer extends Player {
         if (distance < laserThreatRange) {
           threatsFound = true;
           allThreats.push(laser);
-          console.log(`[AI][DETECT] Laser threat detected at (${laser.x}, ${laser.y}) within range ${laserThreatRange}.`);
+          // console.log(`[AI][DETECT] Laser threat detected at (${laser.x}, ${laser.y}) within range ${laserThreatRange}.`);
         }
       }
   
@@ -243,11 +246,11 @@ class ComputerPlayer extends Player {
             threatsFound = true;
             criticalObjectThreat = obj;
             allThreats.push(obj);
-            console.log(`[AI][DETECT] Critical object threat detected: ${obj.type} at (${obj.x}, ${obj.y}) within range ${objectThreatRange} and z-proximity.`);
+            // console.log(`[AI][DETECT] Critical object threat detected: ${obj.type} at (${obj.x}, ${obj.y}) within range ${objectThreatRange} and z-proximity.`);
           } else {
             threatsFound = true;
             allThreats.push(obj);
-            console.log(`[AI][DETECT] Object threat detected: ${obj.type} at (${obj.x}, ${obj.y}) within range ${objectThreatRange}.`);
+            // console.log(`[AI][DETECT] Object threat detected: ${obj.type} at (${obj.x}, ${obj.y}) within range ${objectThreatRange}.`);
           }
         }
       }
@@ -266,10 +269,13 @@ class ComputerPlayer extends Player {
       let moveY = 0;
   
       for (let threat of threats) {
-        let angle = atan2(this.y - threat.y, this.x - threat.x);
-        moveX += cos(angle);
-        moveY += sin(angle);
-        console.log(`[AI][EVADE] Calculating evasion for threat at (${threat.x}, ${threat.y}). Angle: ${angle.toFixed(2)} radians.`);
+        if (threat.z < 2000) {
+          let angle = atan2(this.y - threat.y, this.x - threat.x);
+          moveX += cos(angle);
+          moveY += sin(angle);
+          console.log(`[AI][EVADE] Calculating evasion for threat at (${threat.x}, ${threat.y}). 
+                        Angle: ${angle.toFixed(2)} radians.`);
+        }
       }
   
       // Normalize and determine direction

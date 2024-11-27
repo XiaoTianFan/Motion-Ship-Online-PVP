@@ -279,16 +279,16 @@ class Gameplay {
   handleAIKeyPresses() {
     // Simulate key presses based on AI input
     if (game.aiKeysPressed.w) {
-      game.cursor.y -= 0.1;
+      game.cursor.y -= 0.05;
     }
     if (game.aiKeysPressed.s) {
-      game.cursor.y += 0.1;
+      game.cursor.y += 0.05;
     }
     if (game.aiKeysPressed.a) {
-      game.cursor.x -= 0.1;
+      game.cursor.x -= 0.05;
     }
     if (game.aiKeysPressed.d) {
-      game.cursor.x += 0.1;
+      game.cursor.x += 0.05;
     }
 
     // Constrain cursor within bounds
