@@ -32,7 +32,8 @@ class Instruction {
       laserFired: 0,
       readyToPlay: false,
       bkgSelected: configMenu.selectedBackground,
-      modelSelected: configMenu.selectedShip
+      modelSelected: configMenu.selectedShip,
+      currentComponent: 'Instruction'
     }
   }
 

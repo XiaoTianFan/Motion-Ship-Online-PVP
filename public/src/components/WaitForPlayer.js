@@ -5,7 +5,12 @@ class WaitForPlayer {
     }
   
     init() {
-      this.ready = false;
+      if (game.controlMode === 'Robot') {
+        this.ready = true;
+        this.instructions = "=========CENTER YOUR FACE=========\n\nWaiting For The Other Player\n\nYou Are Ready";
+      } else {
+        this.ready = false;
+      }
     }
   
     update() {
@@ -28,10 +33,11 @@ class WaitForPlayer {
         laserFired: 0,
         readyToPlay: this.ready,
         bkgSelected: configMenu.selectedBackground,
-        modelSelected: configMenu.selectedShip
+        modelSelected: configMenu.selectedShip,
+        currentComponent: 'WaitForPlayer'
       }
       
-      if (globalBroadcastGet.readyToPlay === true & this.ready === true) {
+      if (globalBroadcastGet.readyToPlay === true && this.ready === true) {
         this.instructions = "=========CENTER YOUR FACE=========\n\nWaiting For The Other Player\n\nPress SPACE To Indicate You Are Ready";
         gameStateManager.changeState('Gameplay');
       }
@@ -39,22 +45,25 @@ class WaitForPlayer {
   
     render() {
       background(10);
-      push();
-      // translate(-windowWidth / 2, -windowHeight / 2, 0);
-      // Code of this for loop comes from https://editor.p5js.org/ml5/sketches/lCurUW1TT
-      // Draw all the tracked face points
-      for (let i = 0; i < faces.length; i++) {
-        let face = faces[i];
-        for (let j = 0; j < face.keypoints.length; j++) {
-          let keypoint = face.keypoints[j];
-          fill(0, 255, 0);
-          noStroke();
-          circle(map(keypoint.x, 0, video.width, -width / 2, width / 2), 
-                 map(keypoint.y, 0, video.height, -height / 2, height / 2), 
-                 5);
+      
+      if (game.controlMode != 'Robot') {
+        push();
+        // Code of this for loop comes from https://editor.p5js.org/ml5/sketches/lCurUW1TT
+        // Draw all the tracked face points
+        for (let i = 0; i < faces.length; i++) {
+          let face = faces[i];
+          for (let j = 0; j < face.keypoints.length; j++) {
+            let keypoint = face.keypoints[j];
+            fill(0, 255, 0);
+            noStroke();
+            circle(map(keypoint.x, 0, video.width, -width / 2, width / 2), 
+                  map(keypoint.y, 0, video.height, -height / 2, height / 2), 
+                  5);
+          }
         }
+        pop();
       }
-      pop();
+      
       push();
       translate(0, 0, 0);
       textAlign(CENTER, CENTER);

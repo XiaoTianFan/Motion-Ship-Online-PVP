@@ -134,6 +134,16 @@ class Player {
     shininess(80);
     model(this.model);
     pop();
+
+    // status to debug
+    // Draw AI status
+    push();
+    fill(255);
+    textFont(assets.fonts.ps2p);
+    textSize(12);
+    textAlign(LEFT, TOP);
+    text(`Player X: ${this.x}`+`Y: ${this.y}`, this.x - 50, this.y - 75);
+    pop();
   }
 
   canFire() {
@@ -192,7 +202,7 @@ class Player {
   }
   
   destroy() {
-    // Handle player destruction (e.g., trigger game over)
+    // Handle player destruction 
     game.gameWL = false;
     soundManager.playSound('destruction');
     gameStateManager.changeState('EndScreen');

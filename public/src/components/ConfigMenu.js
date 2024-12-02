@@ -7,8 +7,13 @@ class ConfigMenu {
   }
 
   init() {
-    // Initialize default selections or retrieve previous settings if available
-    this.selectedShip = 'playerShip1'; // Default selection
+    // Initialize default selections 
+    if (game.controlMode === 'Robot') {
+      this.selectedShip = random(['playerShip1', 'playerShip2']);
+    }
+    else {
+      this.selectedShip = 'playerShip1'; // Default selection
+    }
     this.selectedBackground = 'background1'; // Default selection
     this.bkgHistory = ['background1'];
     this.selectedEnemyShip = 'playerShip1';
@@ -37,7 +42,8 @@ class ConfigMenu {
       laserFired: 0,
       readyToPlay: false,
       bkgSelected: this.selectedBackground,
-      modelSelected: this.selectedShip
+      modelSelected: this.selectedShip,
+      currentComponent: 'ConfigMenu'
     }
 
     if (typeof globalBroadcastGet.bkgSelected === "string" & this.bkgHistory[this.bkgHistory.length - 1] !== globalBroadcastGet.bkgSelected) {
@@ -47,6 +53,10 @@ class ConfigMenu {
 
     this.backgroundTexture = assets.textures[this.selectedBackground];
     this.background.texture = this.backgroundTexture;
+
+    if ((game.controlMode === 'Robot') && (globalBroadcastGet.currentComponent === 'Instruction' || globalBroadcastGet.currentComponent === 'WaitForPlayer')) {
+      gameStateManager.changeState('WaitForPlayer');
+    }
   }
 
   render() {

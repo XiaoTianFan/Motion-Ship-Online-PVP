@@ -132,7 +132,7 @@ class EnemyShip {
       this.tacticEngineStart = millis();
       this.tacticEngineOn = true;
       this.tacticEngineUsed = true;
-      if (this.model === assets.models.enemyShip2) {
+      if (this.model === assets.models.playerShip2) {
         globalNotification.update('Enemy Infinite Energy For 15 SEC!');
       } else {
         globalNotification.update('Enemy Indestructible For 15 SEC!');

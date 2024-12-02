@@ -22,8 +22,10 @@ class EndScreen {
       destroyCountdown: 90,
       toDestroy: true,
       laserFired: 0,
-      readyToPlay: false
-  }
+      readyToPlay: false,
+      currentComponent: 'EndScreen'
+    }
+
     // reset laser count
     game.enemyLaserFired = 0;
     game.player.laserFired = 0;
@@ -55,7 +57,32 @@ class EndScreen {
   }
 
   update() {
-    //
+    globalBroadcastSend = {
+      x: 0,
+      y: 0,
+      rotationX: 0,
+      rotationY: 0,
+      rotationZ: 0,
+      health: 100,
+      energy: 100,
+      tacticEngineOn: false,
+      laserCooldown: 100, // milliseconds
+      lastLaserTime: 0,
+      colliderRadius: 30, // Example radius for collision detection
+      destroyCountdown: 90,
+      toDestroy: true,
+      laserFired: 0,
+      readyToPlay: false,
+      currentComponent: 'EndScreen'
+    }
+
+    if (game.controlMode === 'Robot') {
+      if (globalBroadcastGet.currentComponent === 'ConfigMenu') {
+        gameStateManager.changeState('ConfigMenu');
+      } else if (globalBroadcastGet.currentComponent === 'WaitForPlayer') {
+        gameStateManager.changeState('WaitForPlayer');
+      }
+    }
   }
 
   render() {
@@ -67,7 +94,7 @@ class EndScreen {
     textSize(windowWidth / 32);
     if (game.gameWL === false) {
       text("Mission Failed!", 0, -width / 30 * 2.1);
-    } else {
+    } else if (game.gameWL === true || game.gameWL === null) {
       text("Mission Completed!", 0, -width / 30 * 2.1);
     }
     textSize(windowWidth / 64);

@@ -7,9 +7,10 @@ class ComputerPlayer extends Player {
       this.behaviorPriority = behaviorPriority; // 'survival' or 'attack'
       this.enemy = game.enemy; 
       this.lastActionTime = millis();
-      this.actionCooldown = map(this.difficulty, 1, 10, 1000, 100); // in milliseconds
+      this.actionCooldown = map(this.difficulty, 1, 10, 250, 50); // in milliseconds
       this.actionQueue = []; // Queue of actions to perform
       this.firingRange = 100; // Define firing range threshold
+      this.bornTime = millis();
     }
   
     updateAI() {
@@ -39,49 +40,8 @@ class ComputerPlayer extends Player {
     }
   
     decideSurvivalActions() {
-      console.log(`[AI][SURVIVAL] Assessing survival strategies...`);
-      // 1. Detect and handle threats
-      let threats = this.detectThreats();
-      if (threats.hasThreats) {
-        console.log(`[AI][SURVIVAL] Threats detected: ${threats.allThreats.length} threats.`);
-        if (threats.hasCriticalObjectThreat) {
-          console.log(`[AI][SURVIVAL] Critical object threat detected. Attempting to destroy it.`);
-          this.queueAction('fireAt', threats.criticalObject);
-        }
-        // Evade all detected threats
-        let evadeDirection = this.calculateEvasionDirection(threats.allThreats);
-        console.log(`[AI][SURVIVAL] Evasion direction: ${JSON.stringify(evadeDirection)}`);
-        this.queueMovement(evadeDirection);
-      } else {
-        console.log(`[AI][SURVIVAL] No immediate threats detected.`);
-        // 2. No immediate threats
-        if (this.energy < 30) {
-          console.log(`[AI][SURVIVAL] Energy low (${this.energy.toFixed(2)}). Seeking energy ore.`);
-          // Move towards the closest energyOre to gain energy
-          let closestEnergyOre = this.findClosestEnergyOre();
-          if (closestEnergyOre) {
-            console.log(`[AI][SURVIVAL] Closest energy ore at (${closestEnergyOre.x}, ${closestEnergyOre.y}). Moving towards it.`);
-            this.moveTowardsObject(closestEnergyOre);
-            this.queueAction('fireAt', closestEnergyOre); // Attempt to destroy it to collect energy
-          } else {
-            console.log(`[AI][SURVIVAL] No energy ore found. Proceeding to attack.`);
-            // Move towards the enemy and attack
-            this.moveTowardsEnemy();
-            this.queueAction('fire');
-          }
-        } else {
-          console.log(`[AI][SURVIVAL] Energy healthy (${this.energy.toFixed(2)}). Moving towards enemy to attack.`);
-          // Move towards the enemy and attack
-          this.moveTowardsEnemy();
-          this.queueAction('fire');
-        }
-      }
-  
-      // 3. Utilize tactic engine if advantageous
-      if (this.shouldUseTacticEngineSurvival()) {
-        console.log(`[AI][SURVIVAL] Activating tactic engine.`);
-        this.queueAction('activateTacticEngine');
-      }
+      // Abandoned method, will not be used 
+      // (unless another behavior mode 'Survival' is to be used)
     }
   
     decideAttackActions() {
@@ -92,9 +52,11 @@ class ComputerPlayer extends Player {
       if (threats.hasThreats) {
         console.log(`[AI][ATTACK] Threats detected: ${threats.allThreats.length} threats.`);
         
-        if (threats.hasCriticalObjectThreat) {
+        if (threats.hasCriticalObjectThreat && this.energy >= 30) {
           console.log(`[AI][ATTACK] Critical object threat detected. Attempting to destroy it.`);
-          this.queueAction('fireAt', threats.criticalObject);
+          for (let j = 0; j < 3; j++) {
+            this.queueAction('fireAt', threats.criticalObject);
+          }
         }
         
         // Evade all detected threats
@@ -105,29 +67,39 @@ class ComputerPlayer extends Player {
       } else {
         console.log(`[AI][ATTACK] No immediate threats detected.`);
         // 2. No immediate threats
-        if ((this.energy < 30) && (this.enemy.health > 15)) {
-          console.log(`[AI][ATTACK] Energy low (${this.energy.toFixed(2)}). Seeking energy ore.`);
+        if ((this.energy < 40) && (this.enemy.health > 15)) {
+          console.log(`[AI][ATTACK] Energy low (${this.energy.toFixed(2)}).`);
           
-          // Move towards the closest energyOre to gain energy
-          let closestEnergyOre = this.findClosestEnergyOre();
-          if (closestEnergyOre) {
-            console.log(`[AI][ATTACK] Closest energy ore at (${closestEnergyOre.x}, ${closestEnergyOre.y}). Moving towards it.`);
-            
-            this.moveTowardsObject(closestEnergyOre);
-            this.queueAction('fireAt', closestEnergyOre); // Attempt to destroy it to collect energy
+          if (30 <= this.energy) {
+            console.log(`[AI][ATTACK] Energy low. Wait for replenish.`);
           } else {
-            console.log(`[AI][ATTACK] No energy ore found. Proceeding to attack.`);
-            
-            // Move towards the enemy and attack
-            this.moveTowardsEnemy();
-            this.queueAction('fireAt', this.enemy);
+            // Move towards the closest energyOre to gain energy
+            let closestEnergyOre = this.findClosestEnergyOre();
+            if (closestEnergyOre) {
+                console.log(`[AI][ATTACK] Closest energy ore at (${closestEnergyOre.x}, ${closestEnergyOre.y}). Moving towards it.`);
+                
+                this.moveTowardsObject(closestEnergyOre);
+                for (let j = 0; j < 3; j++) {
+                this.queueAction('fireAt', closestEnergyOre); // Attempt to destroy it to collect energy
+                }
+            } else {
+                console.log(`[AI][ATTACK] No energy ore found. Proceeding to attack.`);
+                
+                // Move towards the enemy and attack
+                this.moveTowardsEnemy();
+                for (let j = 0; j < 3; j++) {
+                this.queueAction('fireAt', this.enemy);
+                }
+            }
           }
         } else {
           console.log(`[AI][ATTACK] Energy healthy (${this.energy.toFixed(2)}). Moving towards enemy to attack.`);
           
           // Move towards the enemy and attack
           this.moveTowardsEnemy();
-          this.queueAction('fireAt', this.enemy);
+          for (let j = 0; j < 3; j++) {
+            this.queueAction('fireAt', this.enemy);
+          }
         }
       }
   
@@ -178,9 +150,14 @@ class ComputerPlayer extends Player {
     }
   
     simulateFire() {
-      console.log(`[AI][FIRE] Simulating space key press for firing laser.`);
-      // Simulate pressing the space key
-      game.aiKeysPressed.space = true;
+        let currentTime = millis();
+      if (currentTime - this.bornTime > 1000) {
+        console.log(`[AI][FIRE] Simulating space key press for firing laser.`);
+        // Simulate pressing the space key
+        game.aiKeysPressed.space = true;
+      } else {
+        console.log(`[AI][CEASEFIRE] AI Waiting For Game Loading.`);
+      }
     }
   
     simulateFireAt(target) {
@@ -225,7 +202,7 @@ class ComputerPlayer extends Player {
       let allThreats = [];
   
       const laserThreatRange = 5 * this.difficulty; // Adjustable based on difficulty
-      const objectThreatRange = 10 * this.difficulty; // Larger range for objects
+      const objectThreatRange = 20 * this.difficulty; // Larger range for objects
   
       // Detect laser threats
       for (let laser of game.enemyLaser) {
@@ -242,7 +219,7 @@ class ComputerPlayer extends Player {
         let distance = dist(this.x, this.y, obj.x, obj.y);
         if (distance < objectThreatRange) {
           // Additionally check z-axis proximity
-          if ((obj.z - this.z) < 100) { // Threshold for z-axis proximity
+          if ((obj.z - this.z) < 200) { // Threshold for z-axis proximity
             threatsFound = true;
             criticalObjectThreat = obj;
             allThreats.push(obj);
@@ -269,7 +246,7 @@ class ComputerPlayer extends Player {
       let moveY = 0;
   
       for (let threat of threats) {
-        if (threat.z < 2000) {
+        if (threat.z > -2000) {
           let angle = atan2(this.y - threat.y, this.x - threat.x);
           moveX += cos(angle);
           moveY += sin(angle);
@@ -323,8 +300,8 @@ class ComputerPlayer extends Player {
       let dy = target.y - this.y;
   
       let direction = {
-        up: dy > 20,
-        down: dy < -20,
+        up: dy < 20,
+        down: dy > -20,
         left: dx < -20,
         right: dx > 20
       };
@@ -339,13 +316,13 @@ class ComputerPlayer extends Player {
       let dy = this.enemy.y - this.y;
   
       let direction = {
-        up: dy > 20,
-        down: dy < -20,
+        up: dy < 20,
+        down: dy > -20,
         left: dx < -20,
         right: dx > 20
       };
   
-      console.log(`[AI][MOVE_TO_ENEMY] Moving towards enemy at (${this.enemy.x}, ${this.enemy.y}). Direction: ${JSON.stringify(direction)}.`);
+      console.log(`[AI][MOVE_TO_ENEMY] (${this.x}, ${this.y}) Moving towards enemy at (${this.enemy.x}, ${this.enemy.y}). Direction: ${JSON.stringify(direction)}.`);
       this.queueMovement(direction);
     }
   
@@ -379,9 +356,9 @@ class ComputerPlayer extends Player {
     }
   
     render() {
-      // Optionally, add indicators or different visuals for ComputerPlayer
+      // Add indicators or different visuals for ComputerPlayer
       super.render();
-      // Example: Draw AI status
+      // Draw AI status
       push();
       fill(255);
       textFont(assets.fonts.ps2p);

@@ -1,7 +1,7 @@
 /* Author Xiaotian Fan
 */
 
-// Global Variables
+// Global Variables for game mechanisms
 let assetLoader;
 let gameStateManager;
 let soundProcessor;
@@ -17,7 +17,11 @@ let gamingZone = {
   width: 0,
   height: 0
 };
-let fingerPosition;
+
+// Global variables for arduino communication
+// Array to hold current angles of each finger
+let fingerAngles = [0, 0, 0, 0, 0, 0];
+// LEFT: Index, Middle, Ring, Pinky; RIGHT: Index, Middle
 
 // A global game object to track overall game state and instances
 let game = {
@@ -127,29 +131,23 @@ function setup() {
 
   // Initialize Socket.io
   socket = io();
-
   // Handle connection events
   socket.on('connect', () => {
     console.log('Connected to server');
   });
-
   socket.on('disconnect', () => {
     console.log('Disconnected from server');
   });
-
   // Reconnection attempts
   socket.on('reconnect_attempt', () => {
     console.log('Attempting to reconnect');
   });
-
   socket.on('reconnect', (attemptNumber) => {
     console.log('Reconnected after', attemptNumber, 'attempts');
   });
-
   socket.on('reconnect_error', (error) => {
     console.error('Reconnection error:', error);
   });
-
   // Listen for broadcast messages from other clients
   socket.on('broadcast', (data) => {
     // console.log('Received broadcast');s
@@ -164,7 +162,6 @@ function setup() {
       console.error('Error processing received data:', error);
     }
   });
-
   // Set up the periodic sending
   setInterval(sendBroadcast, BROADCAST_INTERVAL);
 
@@ -229,6 +226,9 @@ function draw() {
   spaceDust.update();
   spaceDust.render();
   pop();
+
+  // Update finger bends to Arduino
+
 }
 
 // Handle key presses for navigating game states
@@ -319,28 +319,33 @@ function sendBroadcast() {
 }
 
 function readSerial(data) {
-  ////////////////////////////////////
-  //READ FROM ARDUINO HERE
-  ////////////////////////////////////
+  // Handle incoming data from Arduino
+  // For this project, we primarily send data to Arduino
+}
 
-  if (data != null) {
-    // make sure there is actually a message
-    
-    // split the message
-    let fromArduino = split(trim(data), ","); 
-    
-    // if the right length, then proceed
-    if (fromArduino.length == 1) {
-      // convert it to a number by using int()
-      rVal = int(fromArduino[0]);
-    }
+function updateFingerAngles() {
+  const keys = ['w', 'a', 's', 'd', 'x', 'space'];
+  const angles = [90, 45, 30, 60, 15, 75]; // Different angles for each key
 
-    //////////////////////////////////
-    //SEND TO ARDUINO HERE (handshake)
-    //////////////////////////////////
-    let sendToArduino = fingerPosition+'\n';
-    writeSerial(sendToArduino);
+  keys.forEach((key, index) => {
+    fingerAngles[index] = game.aiKeysPressed[key] ? angles[index] : 0;
+  });
+
+  sendAngles();
+}
+
+// Send Current Angles to Arduino via Serial
+function sendAngles() {
+  if (serialActive) {
+    let message = fingerAngles.join(",") + "\n";
+    writeSerial(message);
+    console.log("Sent to Arduino:", message.trim());
   }
+}
+
+// Utility Function to Capitalize First Letter
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 // Callback function for when faceMesh outputs data

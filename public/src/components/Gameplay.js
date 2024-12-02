@@ -220,6 +220,12 @@ class Gameplay {
 
     // Update HUD
     this.hud.update(game.player.energy, this.score);
+
+    // Syn when opponent manually quits the game
+    if ((game.controlMode === 'Robot') && (globalBroadcastGet.currentComponent === 'EndScreen')) {
+      gameStateManager.changeState('EndScreen');
+      console.log('Game ends!');
+    }
   }
 
   render() {

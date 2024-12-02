@@ -10,9 +10,9 @@ class ObjectSpawner {
       this.spawnObject();
       this.lastSpawnTime = currentTime;
 
-      // Optionally decrease interval over time to increase difficulty
-      if (this.spawnInterval > 150) {
-        this.spawnInterval -= 25;
+      // Decrease interval over time to increase difficulty
+      if (this.spawnInterval > 300) {
+        this.spawnInterval -= 15;
       }
     }
 
@@ -55,10 +55,11 @@ class ObjectSpawner {
         if (game.player.tacticEngineOn === true && game.player.model === assets.models.playerShip1) {
           obj.destroy();
         } else {
+          obj.destroy();
           soundManager.playSound('collision');
-          game.player.takeDamage(0);
+          game.player.takeDamage(20);
+          // Or, alternatively, destroy player
           // game.player.toDestroy = true;
-          // REMOVE THIS COMMENT /////////////////////////////////////////
         }
       }
     }
