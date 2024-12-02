@@ -24,7 +24,7 @@ class Gameplay {
       game.player = new Player(playerModel, playerTexture);
     } else if (game.controlMode === 'Robot') {
       // Set default difficulty and behavior priority
-      let difficulty = 5; // Example default
+      let difficulty = ComputerDifficulty; // Example default
       let behaviorPriority = 'attack'; // 'survival' or 'attack'
       game.player = new ComputerPlayer(playerModel, playerTexture, difficulty, behaviorPriority);
     }

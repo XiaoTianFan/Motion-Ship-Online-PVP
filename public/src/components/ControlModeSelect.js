@@ -40,16 +40,16 @@ class ControlModeSelect {
       // Display control options
       fill(game.controlMode === 'Humanity' ? 'yellow' : 'white');
       text("A.    Motion", 0, height / 30 * 0);
+      /*
       fill(game.controlMode === 'Android' ? 'yellow' : 'white');
       text("B.  Keyboard", 0, height / 30 * 2);
-      /*
       fill(game.controlMode === 'Robot' ? 'yellow' : 'white');
       text("C.   Robot", 0, height / 30 * 2);
       */
 
       fill(255);
       textSize(windowWidth / 48);
-      text("Press SPACE To Config Your Mission", 0, height / 30 * 4);
+      text("Press SPACE To Config Your Mission", 0, height / 30 * 2);
       pop();
     }
   

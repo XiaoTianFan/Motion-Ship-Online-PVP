@@ -57,7 +57,7 @@ class ObjectSpawner {
         } else {
           obj.destroy();
           soundManager.playSound('collision');
-          game.player.takeDamage(20);
+          game.player.takeDamage(15);
           // Or, alternatively, destroy player
           // game.player.toDestroy = true;
         }

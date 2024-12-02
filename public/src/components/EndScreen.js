@@ -4,6 +4,7 @@ class EndScreen {
     this.score = 0;
     this.prompt = "Press H to Home Page\nPress P to Replan Your Mission\nPress SPACE to Restart Your Mission";
     this.gameData = dataManager; // Reference to DataManager
+    this.initTime = millis();
   }
 
   init() {
@@ -108,12 +109,15 @@ class EndScreen {
   }
 
   handleInput(input) {
-    if (input === 'H') { // Restart
-      gameStateManager.changeState('StartScreen');
-    } else if (input === 'C' || input === 'keyPressed') { // Reconfigure
-      gameStateManager.changeState('ConfigMenu');
-    } else if (input === ' ') {
-      gameStateManager.changeState('WaitForPlayer');
+    let currentTime = millis();
+    if (currentTime - this.initTime > 500) {
+      if (input === 'H') { // Restart
+        gameStateManager.changeState('StartScreen');
+      } else if (input === 'C' || input === 'keyPressed') { // Reconfigure
+        gameStateManager.changeState('ConfigMenu');
+      } else if (input === ' ') {
+        gameStateManager.changeState('WaitForPlayer');
+      }
     }
   }
 }

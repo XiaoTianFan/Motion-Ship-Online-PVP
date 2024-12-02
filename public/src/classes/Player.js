@@ -24,6 +24,7 @@ class Player {
     this.toDestroy = false;
     this.state = null; // flag for if taking damage
     this.laserFired = 0;
+    this.bornTime = millis();
   }
 
   update(pos) {
@@ -136,14 +137,15 @@ class Player {
     pop();
 
     // status to debug
-    // Draw AI status
+    /*
     push();
     fill(255);
     textFont(assets.fonts.ps2p);
     textSize(12);
     textAlign(LEFT, TOP);
-    text(`Player X: ${this.x}`+`Y: ${this.y}`, this.x - 50, this.y - 75);
+    text(`Player X: ${this.x.toFixed(3)}`+`Y: ${this.y.toFixed(3)}`, this.x - 50, this.y - 75);
     pop();
+    */
   }
 
   canFire() {
@@ -156,7 +158,8 @@ class Player {
   }
 
   fireLaser() {
-    if (this.canFire()) {
+    let currentTime = millis();
+    if (this.canFire() && (currentTime - this.bornTime > 2000)) {
       this.energy -= 5; // Energy cost per laser
       this.lastLaserTime = millis();
       // Play laser sound

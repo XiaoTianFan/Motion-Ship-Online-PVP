@@ -9,6 +9,7 @@ class ComputerPlayer extends Player {
       this.lastActionTime = millis();
       this.actionCooldown = map(this.difficulty, 1, 10, 250, 50); // in milliseconds
       this.actionQueue = []; // Queue of actions to perform
+      this.currentAction = null;
       this.firingRange = 100; // Define firing range threshold
       this.bornTime = millis();
     }
@@ -16,7 +17,7 @@ class ComputerPlayer extends Player {
     updateAI() {
       this.enemy = game.enemy; 
 
-      const currentTime = millis();
+      let currentTime = millis();
       if (currentTime - this.lastActionTime > this.actionCooldown) {
         console.log(`[AI][${this.behaviorPriority.toUpperCase()}] Deciding next action...`);
         this.decideNextAction();
@@ -45,15 +46,15 @@ class ComputerPlayer extends Player {
     }
   
     decideAttackActions() {
-      console.log(`[AI][ATTACK] Assessing attack strategies...`);
+      console.log(`[AI][DECIDE] Assessing attack strategies...`);
 
       // 1. Detect and handle threats
       let threats = this.detectThreats();
       if (threats.hasThreats) {
-        console.log(`[AI][ATTACK] Threats detected: ${threats.allThreats.length} threats.`);
+        console.log(`[AI][DECIDE] Threats detected: ${threats.allThreats.length} threats.`);
         
         if (threats.hasCriticalObjectThreat && this.energy >= 30) {
-          console.log(`[AI][ATTACK] Critical object threat detected. Attempting to destroy it.`);
+          console.log(`[AI][DECIDE] Critical object threat detected. Attempting to destroy it.`);
           for (let j = 0; j < 3; j++) {
             this.queueAction('fireAt', threats.criticalObject);
           }
@@ -61,29 +62,29 @@ class ComputerPlayer extends Player {
         
         // Evade all detected threats
         let evadeDirection = this.calculateEvasionDirection(threats.allThreats);
-        console.log(`[AI][ATTACK] Evasion direction: ${JSON.stringify(evadeDirection)}`);
+        console.log(`[AI][EVADE] Evasion direction: ${JSON.stringify(evadeDirection)}`);
         this.queueMovement(evadeDirection);
       
       } else {
-        console.log(`[AI][ATTACK] No immediate threats detected.`);
+        console.log(`[AI][DECIDE] No immediate threats detected.`);
         // 2. No immediate threats
         if ((this.energy < 40) && (this.enemy.health > 15)) {
-          console.log(`[AI][ATTACK] Energy low (${this.energy.toFixed(2)}).`);
+          console.log(`[AI][DECIDE] Energy low (${this.energy.toFixed(2)}).`);
           
           if (30 <= this.energy) {
-            console.log(`[AI][ATTACK] Energy low. Wait for replenish.`);
+            console.log(`[AI][DECIDE] Energy low. Wait for replenish.`);
           } else {
             // Move towards the closest energyOre to gain energy
             let closestEnergyOre = this.findClosestEnergyOre();
             if (closestEnergyOre) {
-                console.log(`[AI][ATTACK] Closest energy ore at (${closestEnergyOre.x}, ${closestEnergyOre.y}). Moving towards it.`);
+                console.log(`[AI][DECIDE] Closest energy ore at (${closestEnergyOre.x}, ${closestEnergyOre.y}). Moving towards it.`);
                 
                 this.moveTowardsObject(closestEnergyOre);
                 for (let j = 0; j < 3; j++) {
                 this.queueAction('fireAt', closestEnergyOre); // Attempt to destroy it to collect energy
                 }
             } else {
-                console.log(`[AI][ATTACK] No energy ore found. Proceeding to attack.`);
+                console.log(`[AI][DECIDE] No energy ore found. Proceeding to attack.`);
                 
                 // Move towards the enemy and attack
                 this.moveTowardsEnemy();
@@ -93,7 +94,7 @@ class ComputerPlayer extends Player {
             }
           }
         } else {
-          console.log(`[AI][ATTACK] Energy healthy (${this.energy.toFixed(2)}). Moving towards enemy to attack.`);
+          console.log(`[AI][DECIDE] Energy healthy (${this.energy.toFixed(2)}). Moving towards enemy to attack.`);
           
           // Move towards the enemy and attack
           this.moveTowardsEnemy();
@@ -105,23 +106,20 @@ class ComputerPlayer extends Player {
   
       // 3. Utilize tactic engine if advantageous
       if (this.shouldUseTacticEngineAttack()) {
-        console.log(`[AI][ATTACK] Activating tactic engine.`);
+        console.log(`[AI][DECIDE] Activating tactic engine.`);
         this.queueAction('activateTacticEngine');
       }
     }
   
     executeActions() {
       while (this.actionQueue.length > 0) {
-        let action = this.actionQueue.shift();
-        switch (action.type) {
+        this.currentAction = this.actionQueue.shift();
+        switch (this.currentAction.type) {
           case 'move':
-            this.simulateMovement(action.direction, action.duration);
-            break;
-          case 'fire':
-            this.simulateFire();
+            this.simulateMovement(this.currentAction.direction, this.currentAction.duration);
             break;
           case 'fireAt':
-            this.simulateFireAt(action.target);
+            this.simulateFireAt(this.currentAction.target);
             break;
           case 'activateTacticEngine':
             this.simulateTacticEngine();
@@ -150,8 +148,8 @@ class ComputerPlayer extends Player {
     }
   
     simulateFire() {
-        let currentTime = millis();
-      if (currentTime - this.bornTime > 1000) {
+      let currentTime = millis();
+      if (currentTime - this.bornTime > 2000) {
         console.log(`[AI][FIRE] Simulating space key press for firing laser.`);
         // Simulate pressing the space key
         game.aiKeysPressed.space = true;
@@ -322,32 +320,25 @@ class ComputerPlayer extends Player {
         right: dx > 20
       };
   
-      console.log(`[AI][MOVE_TO_ENEMY] (${this.x}, ${this.y}) Moving towards enemy at (${this.enemy.x}, ${this.enemy.y}). Direction: ${JSON.stringify(direction)}.`);
+      console.log(`[AI][MOVE_TO_ENEMY] Moving towards enemy at (${this.enemy.x}, ${this.enemy.y}). Direction: ${JSON.stringify(direction)}.`);
       this.queueMovement(direction);
     }
   
     shouldUseTacticEngineSurvival() {
-      // Decide whether to activate tactic engine based on health and energy
-      if (!this.tacticEngineUsed) {
-        if (this.health < 30 || this.energy < 30) {
-          console.log(`[AI][TACTIC_ENGINE] Conditions met for tactic engine activation (Health: ${this.health}, Energy: ${this.energy}).`);
-          return true;
-        }
-      }
-      return false;
+      // Abandoned method
     }
   
     shouldUseTacticEngineAttack() {
       // Decide whether to activate tactic engine based on attack advantage
       if (!this.tacticEngineUsed) {
-        if (this.health < 30 || this.energy < 30) {
+        if (this.health < 30) {
           console.log(`[AI][TACTIC_ENGINE] Conditions met for tactic engine activation (Health: ${this.health}, Energy: ${this.energy}).`);
           return true;
         }
         if (this.model === assets.models.playerShip2) {
           // Additional condition: If enemy health is low and need more energy to destroy it
-          if (game.enemy.health < 50 && this.energy > 70) {
-            console.log(`[AI][TACTIC_ENGINE] Additional condition met for playerShip2: Enemy health is low (${game.enemy.health}).`);
+          if (game.enemy.health < 30 && this.energy < 50) {
+            console.log(`[AI][TACTIC_ENGINE] Condition met for playerShip2: Enemy health is low (${game.enemy.health}).`);
             return true;
           }
         }
@@ -364,8 +355,11 @@ class ComputerPlayer extends Player {
       textFont(assets.fonts.ps2p);
       textSize(12);
       textAlign(LEFT, TOP);
+      text(`X: ${this.x.toFixed(3)}`+`Y: ${this.y.toFixed(3)}`, this.x - 50, this.y - 75);
       text(`AI Difficulty: ${this.difficulty}`, this.x - 50, this.y - 60);
-      text(`Priority: ${this.behaviorPriority}`, this.x - 50, this.y - 45);
+      if (this.currentAction != null) {
+        text(`Behavior: ${this.currentAction.type}`, this.x - 50, this.y - 45);
+      }
       pop();
     }
   }
