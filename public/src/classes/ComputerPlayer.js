@@ -200,7 +200,7 @@ class ComputerPlayer extends Player {
       let allThreats = [];
   
       const laserThreatRange = 5 * this.difficulty; // Adjustable based on difficulty
-      const objectThreatRange = 20 * this.difficulty; // Larger range for objects
+      const objectThreatRange = 25 * this.difficulty; // Larger range for objects
   
       // Detect laser threats
       for (let laser of game.enemyLaser) {
@@ -355,7 +355,7 @@ class ComputerPlayer extends Player {
       textFont(assets.fonts.ps2p);
       textSize(12);
       textAlign(LEFT, TOP);
-      text(`X: ${this.x.toFixed(3)}`+`Y: ${this.y.toFixed(3)}`, this.x - 50, this.y - 75);
+      text(`X: ${this.x.toFixed(1)}`+`Y: ${this.y.toFixed(1)}`, this.x - 50, this.y - 75);
       text(`AI Difficulty: ${this.difficulty}`, this.x - 50, this.y - 60);
       if (this.currentAction != null) {
         text(`Behavior: ${this.currentAction.type}`, this.x - 50, this.y - 45);
