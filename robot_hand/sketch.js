@@ -3,16 +3,17 @@
 */
 
 // Array to hold current angles of each finger
-let fingerAngles = [0, 0, 0, 0, 0]; // Thumb, Index, Middle, Ring, Pinky
+let fingerAngles = [0, 0, 0, 0, 0, 0]; // Index, Middle, Ring, Pinky, Index2, Ring2
 
 // Finger Names
-const fingerNames = ["Thumb", "Index", "Middle", "Ring", "Pinky"];
+const fingerNames = ["Index", "Middle", "Ring", "Pinky", "Index2", "Ring2"];
 
 // Servo Control Pins (matches Arduino pins)
-const servoPins = [3, 4, 5, 6, 7];
+const servoPins = [3, 4, 5, 6, 7, 8];
 
-// Buttons for Interactive Mode
+// Buttons and Sliders for Interactive Mode
 let buttons = [];
+let sliders = [];
 
 // Mode State: 'automatic' or 'interactive'
 let currentMode = 'interactive';
@@ -52,7 +53,7 @@ function draw() {
   
   // Display Finger Angles
   fill(0);
-  for(let i = 0; i < 5; i++) {
+  for(let i = 0; i < 6; i++) {
     text(`${fingerNames[i]}: ${fingerAngles[i]}°`, 40, 100 + i*40);
   }
   
@@ -65,12 +66,28 @@ function draw() {
 // Create UI Elements for Interactive Mode
 function createUI() {
   // Interactive Mode Buttons
-  for(let i = 0; i < 5; i++) {
+  for(let i = 0; i < 6; i++) {
+    // Create a slider for each finger
+    let slider = createSlider(0, 180, 90);
+    slider.position(200, 80 + i * 40);
+    sliders.push(slider);
+    
+    // Create a button for each finger
     let btn = createButton(`Bend ${fingerNames[i]}`);
     btn.position(350, 80 + i*40);
     btn.mousePressed(() => bendFinger(i));
     btn.style('display', currentMode === 'interactive' ? 'block' : 'none');
     buttons.push(btn);
+    
+    // Label for slider
+    let label = createSpan(` Angle: `);
+    label.position(200, 60 + i * 40);
+    let angleDisplay = createSpan(`${slider.value()}°`);
+    angleDisplay.position(300, 60 + i * 40);
+    // Update angle display as slider moves
+    slider.input(() => {
+      angleDisplay.html(`${slider.value()}°`);
+    });
   }
   
   // Mode Display
@@ -87,8 +104,10 @@ function displayMode() {
   // Show or Hide Buttons Based on Mode
   if (currentMode === 'interactive') {
     buttons.forEach(btn => btn.style('display', 'block'));
+    sliders.forEach(slider => slider.show());
   } else {
     buttons.forEach(btn => btn.style('display', 'none'));
+    sliders.forEach(slider => slider.hide());
   }
   
   // Instructions
@@ -153,18 +172,18 @@ function bendFinger(fingerIndex) {
   if (!serialActive || currentMode !== 'interactive') return;
   
   // Define bend and release angles
-  const bendAngle = 90;
+  const bendAngle = sliders[fingerIndex].value();
   const releaseAngle = 0;
   
   // Bend the selected finger
   fingerAngles[fingerIndex] = bendAngle;
   sendAngles();
   
-  // Release after 1 second
+  // Release after 0.2 second
   setTimeout(() => {
     fingerAngles[fingerIndex] = releaseAngle;
     sendAngles();
-  }, 1000);
+  }, 200);
 }
 
 // Send Current Angles to Arduino via Serial
@@ -192,3 +211,111 @@ function readSerial(data) {
 // - Arduino expects a comma-separated list of 5 angles ending with a newline ("\n")
 // - Example: "90,0,0,0,0\n" bends the thumb to 90 degrees
 
+/*
+#include <Servo.h>
+
+// Define servo objects for each finger
+Servo indexServo;
+Servo middleServo;
+Servo ringServo;
+Servo pinkyServo;
+Servo indexServo2;
+Servo ringServo2;
+
+// Define servo pins
+const int indexPin = 2;
+const int middlePin = 3;
+const int ringPin = 4;
+const int pinkyPin = 5;
+const int indexPin2 = 6;
+const int ringPin2 = 7;
+
+// Define LED pins
+const int LEDPins[] = {8, 9, 10, 11, 12, 13};
+// indexLEDPin, middleLEDPin, ringLEDPin, pinkyLEDPin, indexLEDPin2, ringLEDPin2
+
+// Array to hold servo objects for easy access
+Servo servos[6];
+
+// Blink LED while waiting for serial data
+const int ledPin = LED_BUILTIN;
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+  
+  // Attach servos to their respective pins
+  servos[0].attach(indexPin);
+  servos[1].attach(middlePin);
+  servos[2].attach(ringPin);
+  servos[3].attach(pinkyPin);
+  servos[4].attach(indexPin2);
+  servos[5].attach(ringPin2);
+
+  // Set LED pins to output mode
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
+  
+  // Initialize all servos to 0 degrees (open position)
+  for(int i = 0; i < 6; i++) {
+    servos[i].write(0);
+    delay(100);
+  }
+  
+  // Initialize LED pin
+  pinMode(ledPin, OUTPUT);
+  
+  // Handshake: Wait for p5.js to send initial data
+  while (Serial.available() <= 0) {
+    digitalWrite(ledPin, HIGH); // LED on while waiting
+    Serial.println("0,0,0,0,0,0"); // Send initial positions
+    delay(300);
+    digitalWrite(ledPin, LOW);
+    delay(50);
+  }
+}
+
+void loop() {
+  // Check if data is available from p5.js
+  while (Serial.available()) {
+    // digitalWrite(ledPin, HIGH); // LED on while receiving data
+    
+    // Read the incoming line
+    String data = Serial.readStringUntil('\n');
+    data.trim(); // Remove any trailing whitespace
+    
+    // Split the data by commas
+    int angles[6];
+    int currentIndex = 0;
+    int lastComma = -1;
+    for(int i = 0; i < data.length(); i++) {
+      if(data[i] == ',') {
+        angles[currentIndex++] = data.substring(lastComma + 1, i).toInt();
+        lastComma = i;
+      }
+    }
+    // Last value after the final comma
+    angles[currentIndex] = data.substring(lastComma + 1).toInt();
+    
+    // Update servo positions
+    for(int i = 0; i < 6; i++) {
+      servos[i].write(angles[i]); // Set servo to desired angle
+      digitalWrite(LEDPins[i], angles[i] != 0? HIGH : LOW); // Light the LED accordingly
+    } 
+    
+    // Echo back the angles
+    Serial.print(angles[0]);
+    for(int i = 1; i < 6; i++) {
+      Serial.print(",");
+      Serial.print(angles[i]);
+    }
+    Serial.println();
+    
+    // digitalWrite(ledPin, LOW); // Turn off LED after processing
+  }
+}
+*/

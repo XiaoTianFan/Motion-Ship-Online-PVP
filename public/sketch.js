@@ -227,9 +227,6 @@ function draw() {
   spaceDust.update();
   spaceDust.render();
   pop();
-
-  // Update finger bends to Arduino
-
 }
 
 // Handle key presses for navigating game states
@@ -322,31 +319,6 @@ function sendBroadcast() {
 function readSerial(data) {
   // Handle incoming data from Arduino
   // For this project, we primarily send data to Arduino
-}
-
-function updateFingerAngles() {
-  const keys = ['w', 'a', 's', 'd', 'x', 'space'];
-  const angles = [90, 45, 30, 60, 15, 75]; // Different angles for each key
-
-  keys.forEach((key, index) => {
-    fingerAngles[index] = game.aiKeysPressed[key] ? angles[index] : 0;
-  });
-
-  sendAngles();
-}
-
-// Send Current Angles to Arduino via Serial
-function sendAngles() {
-  if (serialActive) {
-    let message = fingerAngles.join(",") + "\n";
-    writeSerial(message);
-    console.log("Sent to Arduino:", message.trim());
-  }
-}
-
-// Utility Function to Capitalize First Letter
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 // Callback function for when faceMesh outputs data
