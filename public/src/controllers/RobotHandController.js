@@ -1,11 +1,11 @@
 class RobotHandController {
     constructor() {
-      //
+      this.lastUpdateTime = millis();
     }
 
     init() {
-        //
-      }
+      //
+    }
     
     update() {
       // Update finger bends to Arduino
@@ -16,20 +16,27 @@ class RobotHandController {
     updateFingerAngles() {
       // Stop function if no serial connection
       if (!serialActive) return;
-    
-      const keys = ['w', 'a', 's', 'd', 'x', 'space'];
-      const angles = [30, 30, 30, 50, 60, 60]; // Different angles for each key
-    
-      for (let i = 0; i < 6; i++) {
-        if (game.aiKeysPressed[keys[i]] === true) {
-          if (fingerAngles[i] != angles[i]) {
-            fingerAngles[i] = angles[i];
-          } 
-        } else {
-        fingerAngles[i] = 0;
+
+      let currentTime = millis();
+
+      if (currentTime - this.lastUpdateTime > 20) {
+        const keys = ['w', 'a', 's', 'd', 'x', 'space'];
+        const angles = [50, 30, 50, 50, 60, 60]; // Different angles for each key
+      
+        for (let i = 0; i < 6; i++) {
+          if (game.aiKeysPressed[keys[i]] === true) {
+            if (fingerAngles[i] != angles[i]) {
+              fingerAngles[i] = angles[i];
+            } 
+          } else {
+          fingerAngles[i] = 0;
+          }
         }
+        this.sendAngles();
       }
-      this.sendAngles();
+      
+      this.lastUpdateTime = currentTime;
+      
     }
 
     // Send Current Angles to Arduino via Serial

@@ -70,9 +70,9 @@ class LineBreakTransformer {
   }
 }
 
-async function setUpSerial() {
+async function setUpSerial(baud) {
   noLoop();
-  ({ port, reader, writer } = await getPort(115200));
+  ({ port, reader, writer } = await getPort(baud));
   serialActive = true;
   runSerial();
   loop();
