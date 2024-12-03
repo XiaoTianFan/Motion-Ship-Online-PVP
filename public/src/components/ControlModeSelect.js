@@ -61,7 +61,7 @@ class ControlModeSelect {
       } else if (input === 'C') {
         game.controlMode = 'Robot';
         // Initialize or Re-initialize Serial Connection
-        setUpSerial(115200).then(() => {
+        setUpSerial(9600).then(() => {
           serialActive = true;
           console.log("Serial connection established.");
         }).catch(err => {

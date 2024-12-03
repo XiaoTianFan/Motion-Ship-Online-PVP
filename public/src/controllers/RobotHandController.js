@@ -22,7 +22,9 @@ class RobotHandController {
     
       for (let i = 0; i < 6; i++) {
         if (game.aiKeysPressed[keys[i]] === true) {
-        fingerAngles[i] = angles[i];
+          if (fingerAngles[i] != angles[i]) {
+            fingerAngles[i] = angles[i];
+          } 
         } else {
         fingerAngles[i] = 0;
         }
