@@ -242,7 +242,7 @@ const int ledPin = LED_BUILTIN;
 
 void setup() {
   // Initialize serial communication
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   // Attach servos to their respective pins
   servos[0].attach(indexPin);

@@ -14,6 +14,9 @@ class Gameplay {
     // Reset game result
     game.gameWL = null;
 
+    // Initialize robot hand controller
+    game.robotHandController = new RobotHandController();
+
     // Initialize player with selected spaceship 
     let selectedShip = configMenu.selectedShip || 'playerShip1';
     let playerModel = assets.models[selectedShip];
@@ -132,7 +135,7 @@ class Gameplay {
 
       console.log(game.cursor);
 
-      // Updart background
+      // Update background
       this.background.update(game.cursor.x, game.cursor.y);
     } else if (game.controlMode === 'Robot') {
       
@@ -142,8 +145,9 @@ class Gameplay {
         game.player.updateAI();
       }
 
-      // Apply AI key presses to movement
+      // Apply AI key presses to movement and robot hand
       this.handleAIKeyPresses();
+      // game.robotHandController.update();
 
       // Updart background
       this.background.update(game.cursor.x, game.cursor.y);

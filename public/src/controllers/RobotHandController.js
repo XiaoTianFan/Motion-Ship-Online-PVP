@@ -1,7 +1,6 @@
-class ObjectSpawner {
+class RobotHandController {
     constructor() {
-      this.spawnInterval = 2000; // Initial spawn every 2 seconds
-      this.lastSpawnTime = millis();
+      //
     }
 
     init() {
@@ -10,7 +9,7 @@ class ObjectSpawner {
     
     update() {
       // Update finger bends to Arduino
-      updateFingerAngles()
+      this.updateFingerAngles();
     }
 
     // Update Fingers according to the virtual keys
@@ -21,24 +20,22 @@ class ObjectSpawner {
       const keys = ['w', 'a', 's', 'd', 'x', 'space'];
       const angles = [30, 30, 30, 50, 60, 60]; // Different angles for each key
     
-      for (i = 0; i < 6; i++) {
-        console.log(keys[i], game.aiKeysPressed[keys[i]])
+      for (let i = 0; i < 6; i++) {
         if (game.aiKeysPressed[keys[i]] === true) {
         fingerAngles[i] = angles[i];
         } else {
         fingerAngles[i] = 0;
         }
       }
-      sendAngles();
+      this.sendAngles();
     }
 
-    
     // Send Current Angles to Arduino via Serial
     sendAngles() {
       if (serialActive) {
         let message = fingerAngles.join(",") + "\n";
         writeSerial(message);
-        // console.log("Sent to Arduino:", message.trim());
+        console.log("Sent to Arduino:", message.trim());
       }
     }
 }

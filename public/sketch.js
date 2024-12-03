@@ -48,7 +48,8 @@ let game = {
     d: false,
     space: false,
     x: false
-  }
+  },
+  robotHandController: null
 };
 
 // The global broadcast dicitonaires to communicate with the other player
@@ -314,11 +315,6 @@ function sendBroadcast() {
   // Send the entire dictionary to the server to broadcast to other clients
   socket.emit('broadcast', BroadcastSend);
   // console.log('Sent broadcast:', BroadcastSend);
-}
-
-function readSerial(data) {
-  // Handle incoming data from Arduino
-  // For this project, we primarily send data to Arduino
 }
 
 // Callback function for when faceMesh outputs data
