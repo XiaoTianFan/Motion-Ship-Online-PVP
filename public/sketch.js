@@ -17,7 +17,7 @@ let gamingZone = {
   width: 0,
   height: 0
 };
-let ComputerDifficulty = 4; // 1-10, The higher the faster computer reaction time
+let ComputerDifficulty = 5; // 1-10, The higher the faster computer reaction time
 
 // Global variables for arduino communication
 // Array to hold current angles of each finger

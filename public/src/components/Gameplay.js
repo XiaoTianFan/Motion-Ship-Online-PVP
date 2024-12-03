@@ -147,7 +147,7 @@ class Gameplay {
 
       // Apply AI key presses to movement and robot hand
       this.handleAIKeyPresses();
-      // game.robotHandController.update();
+      game.robotHandController.update();
 
       // Updart background
       this.background.update(game.cursor.x, game.cursor.y);

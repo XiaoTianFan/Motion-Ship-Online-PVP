@@ -60,7 +60,6 @@ class ControlModeSelect {
         game.controlMode = 'Android';
       } else if (input === 'C') {
         game.controlMode = 'Robot';
-        /*
         // Initialize or Re-initialize Serial Connection
         setUpSerial(115200).then(() => {
           serialActive = true;
@@ -68,7 +67,6 @@ class ControlModeSelect {
         }).catch(err => {
           console.error("Serial connection failed:", err);
         });
-        */
         gameStateManager.changeState('ConfigMenu');
       } else if (input === ' ') {
         gameStateManager.changeState('ConfigMenu');
