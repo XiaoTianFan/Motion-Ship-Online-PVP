@@ -166,13 +166,6 @@ function setup() {
   });
   // Set up the periodic sending
   setInterval(sendBroadcast, BROADCAST_INTERVAL);
-
-  // Initializes the video capture and hide it
-  video = createCapture(VIDEO);
-  video.size(640, 480);
-  video.hide();
-  // Start detecting faces from the webcam video
-  faceMesh.detectStart(video, gotFaces);
   
   // Assign assetLoader to global assets variable
   assets = assetLoader;
@@ -197,10 +190,6 @@ function setup() {
   // Initialize Data Manager and load existing game data
   dataManager = new DataManager();
   dataManager.loadGameData();
-
-  // Initialize Face Tracker for head movement detection
-  faceTracker = new FaceTracker();
-  faceTracker.init();
 
   // Initialize Game State Manager to handle game flow
   gameStateManager = new GameStateManager();

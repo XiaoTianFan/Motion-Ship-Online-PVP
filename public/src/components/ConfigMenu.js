@@ -7,6 +7,19 @@ class ConfigMenu {
   }
 
   init() {
+    if (game.controlMode = 'Humanity') {
+      // Initializes the video capture and hide it
+      video = createCapture(VIDEO);
+      video.size(640, 480);
+      video.hide();
+      // Start detecting faces from the webcam video
+      faceMesh.detectStart(video, gotFaces);
+    }
+    
+    // Initialize Face Tracker for head movement detection
+    faceTracker = new FaceTracker();
+    faceTracker.init();
+
     // Initialize default selections 
     if (game.controlMode === 'Robot') {
       this.selectedShip = random(['playerShip1', 'playerShip2']);

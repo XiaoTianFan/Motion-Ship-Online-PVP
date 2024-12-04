@@ -14,13 +14,23 @@ class GlobalNotification {
   render() {
     let currentTime = millis();
     if (this.displaying === true && currentTime - this.displayTime < 3000) {
-      push();
-      translate(0, 0, 400);
-      fill(245, 245, 245, 245);
-      textFont(assets.fonts.ps2p);
-      textSize(gamingZone.width / 96);
-      textAlign(CENTER, CENTER);
-      text(this.text, 0, 0);
+      if (gameStateManager.currentState instanceof ControlModeSelect) {
+        push();
+        translate(0, 0, 400);
+        fill('yellow');
+        textFont(assets.fonts.ps2p);
+        textSize(width / 64);
+        textAlign(CENTER, CENTER);
+        text(this.text, 0, 0);
+      } else {
+        push();
+        translate(0, 0, 400);
+        fill(245, 245, 245, 245);
+        textFont(assets.fonts.ps2p);
+        textSize(gamingZone.width / 96);
+        textAlign(CENTER, CENTER);
+        text(this.text, 0, 0);
+      }
     } else {
       this.displaying = false;
     }

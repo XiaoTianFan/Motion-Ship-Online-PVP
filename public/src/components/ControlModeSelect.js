@@ -34,8 +34,8 @@ class ControlModeSelect {
       textAlign(CENTER, CENTER);
       textFont(assets.fonts.ps2p);
       fill(255);
-      textSize(windowWidth / 32);
-      text("Select Your Control Mode", 0, height / 30 * -2);
+      textSize(windowWidth / 42);
+      text("Select Your Control Mode With Keyboard", 0, height / 30 * -2);
       textSize(windowWidth / 46);
       // Display control options
       fill(game.controlMode === 'Humanity' ? 'yellow' : 'white');
@@ -51,6 +51,9 @@ class ControlModeSelect {
       textSize(windowWidth / 48);
       text("Press SPACE To Config Your Mission", 0, height / 30 * 2);
       pop();
+
+      // Render Notification
+      globalNotification.render();
     }
   
     handleInput(input) {
@@ -69,23 +72,27 @@ class ControlModeSelect {
         });
         gameStateManager.changeState('ConfigMenu');
       } else if (input === ' ') {
-        gameStateManager.changeState('ConfigMenu');
-        globalBroadcastSend = {
-            x: 0,
-            y: 0,
-            rotationX: 0,
-            rotationY: 0,
-            rotationZ: 0,
-            health: 100,
-            energy: 100,
-            tacticEngineOn: false,
-            laserCooldown: 100, // milliseconds
-            lastLaserTime: 0,
-            colliderRadius: 30, // Example radius for collision detection
-            destroyCountdown: 90,
-            toDestroy: false,
-            laserFired: 0,
-            readyToPlay: false
+        if (game.controlMode != null) {
+          gameStateManager.changeState('ConfigMenu');
+          globalBroadcastSend = {
+              x: 0,
+              y: 0,
+              rotationX: 0,
+              rotationY: 0,
+              rotationZ: 0,
+              health: 100,
+              energy: 100,
+              tacticEngineOn: false,
+              laserCooldown: 100, // milliseconds
+              lastLaserTime: 0,
+              colliderRadius: 30, // Example radius for collision detection
+              destroyCountdown: 90,
+              toDestroy: false,
+              laserFired: 0,
+              readyToPlay: false
+          }
+        } else {
+          globalNotification.update('Please Select Control Mode!');
         }
       }
     }
