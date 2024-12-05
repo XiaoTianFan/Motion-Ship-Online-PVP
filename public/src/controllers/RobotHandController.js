@@ -19,7 +19,7 @@ class RobotHandController {
 
       let currentTime = millis();
 
-      if (currentTime - this.lastUpdateTime > 20) {
+      if (currentTime - this.lastUpdateTime > 0) {
         const keys = ['w', 'a', 's', 'd', 'x', 'space'];
         const angles = [50, 30, 50, 50, 60, 60]; // Different angles for each key
       
@@ -29,7 +29,9 @@ class RobotHandController {
               fingerAngles[i] = angles[i];
             } 
           } else {
-          fingerAngles[i] = 0;
+            if (currentTime - this.lastUpdateTime > 50) {
+              fingerAngles[i] = 0;
+            }
           }
         }
         this.sendAngles();

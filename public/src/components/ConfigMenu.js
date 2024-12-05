@@ -7,13 +7,21 @@ class ConfigMenu {
   }
 
   init() {
-    if (game.controlMode = 'Humanity') {
+    if (game.controlMode === 'Humanity') {
       // Initializes the video capture and hide it
       video = createCapture(VIDEO);
       video.size(640, 480);
       video.hide();
       // Start detecting faces from the webcam video
       faceMesh.detectStart(video, gotFaces);
+    } else if (game.controlMode === 'Robot') {
+      // Initialize or Re-initialize Serial Connection
+      setUpSerial(9600).then(() => {
+      serialActive = true;
+      console.log("Serial connection established.");
+    }).catch(err => {
+      console.error("Serial connection failed:", err);
+    });
     }
     
     // Initialize Face Tracker for head movement detection

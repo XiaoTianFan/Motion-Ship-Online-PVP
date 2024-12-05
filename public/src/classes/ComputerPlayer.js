@@ -7,7 +7,7 @@ class ComputerPlayer extends Player {
       this.behaviorPriority = behaviorPriority; // 'survival' or 'attack'
       this.enemy = game.enemy; 
       this.lastActionTime = millis();
-      this.actionCooldown = map(this.difficulty, 1, 10, 250, 50); // in milliseconds
+      this.actionCooldown = map(this.difficulty, 1, 10, 500, 50); // in milliseconds
       this.actionQueue = []; // Queue of actions to perform
       this.currentAction = null;
       this.firingRange = 100; // Define firing range threshold
