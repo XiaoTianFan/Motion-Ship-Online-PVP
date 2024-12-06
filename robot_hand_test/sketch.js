@@ -1,5 +1,5 @@
 /* 
-  Robot Hand Control
+  Robot Hand Control Test
 */
 
 // Array to hold current angles of each finger
@@ -215,6 +215,9 @@ function readSerial(data) {
 /*
 #include <Servo.h>
 
+unsigned long previousMillis = 0; // Store the last time the LED was updated
+const long interval = 250; // Interval to wait (2 seconds)
+
 // Define servo objects for each finger
 Servo indexServo;
 Servo middleServo;
@@ -224,18 +227,25 @@ Servo indexServo2;
 Servo ringServo2;
 
 // Define servo pins
-const int indexPin = 3;
-const int middlePin = 4;
-const int ringPin = 5;
-const int pinkyPin = 6;
-const int indexPin2 = 7;
-const int ringPin2 = 8;
+const int indexPin = 2;
+const int middlePin = 3;
+const int ringPin = 4;
+const int pinkyPin = 5;
+const int indexPin2 = 6;
+const int ringPin2 = 7;
+
+// Define LED pins
+const int LEDPins[] = {8, 9, 10, 11, 12, 13};
+// indexLEDPin, middleLEDPin, ringLEDPin, pinkyLEDPin, indexLEDPin2, ringLEDPin2
 
 // Array to hold servo objects for easy access
 Servo servos[6];
 
 // Blink LED while waiting for serial data
 const int ledPin = LED_BUILTIN;
+
+// Array to hold default angles
+const int fingerDefaultAngles[] = {0, 15, 20, 20, 60, 30};
 
 void setup() {
   // Initialize serial communication
@@ -248,6 +258,14 @@ void setup() {
   servos[3].attach(pinkyPin);
   servos[4].attach(indexPin2);
   servos[5].attach(ringPin2);
+
+  // Set LED pins to output mode
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
   
   // Initialize all servos to 0 degrees (open position)
   for(int i = 0; i < 6; i++) {
@@ -271,7 +289,7 @@ void setup() {
 void loop() {
   // Check if data is available from p5.js
   while (Serial.available()) {
-    digitalWrite(ledPin, HIGH); // LED on while receiving data
+    // digitalWrite(ledPin, HIGH); // LED on while receiving data
     
     // Read the incoming line
     String data = Serial.readStringUntil('\n');
@@ -290,21 +308,31 @@ void loop() {
     // Last value after the final comma
     angles[currentIndex] = data.substring(lastComma + 1).toInt();
     
-    // Update servo positions
-    for(int i = 0; i < 6; i++) {
-      servos[i].write(angles[i]); // Set servo to desired angle
+    // Get the current time
+    unsigned long currentMillis = millis();
+
+    // Check if the interval has passed
+    if (currentMillis - previousMillis >= interval) {
+      // Save the last time the LED was updated
+      previousMillis = currentMillis;
+
+        // Update servo positions
+      for(int i = 0; i < 6; i++) {
+        servos[i].write(angles[i]); // Set servo to desired angle
+      } 
     }
-    
-    // Send back current sensor readings or status if needed
-    // For now, echo back the angles
+
+    for(int i = 0; i < 6; i++) {
+      digitalWrite(LEDPins[i], angles[i] != fingerDefaultAngles[i]? HIGH : LOW); // Light the LED accordingly
+    }
+    // Echo back the angles
     Serial.print(angles[0]);
     for(int i = 1; i < 6; i++) {
       Serial.print(",");
       Serial.print(angles[i]);
     }
     Serial.println();
-    
-    digitalWrite(ledPin, LOW); // Turn off LED after processing
+    // digitalWrite(ledPin, LOW); // Turn off LED after processing
   }
 }
 */
