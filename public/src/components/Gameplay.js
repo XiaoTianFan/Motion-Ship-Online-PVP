@@ -161,7 +161,7 @@ class Gameplay {
           game.laserBeams.push(laser);
         }
       }
-    } else if (game.controlMode === 'Robot') {
+    } else if (game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') {
       // Handle laser firing based on AI key press
       if (game.aiKeysPressed.space && game.player.canFire()) {
         let laser = game.player.fireLaser();
@@ -208,7 +208,7 @@ class Gameplay {
     // Update event log
     this.logConstrain();
 
-    if (game.controlMode === 'Robot') {
+    if (game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') {
       // Reset AI key presses each frame
       this.resetAIKeys();
     }
