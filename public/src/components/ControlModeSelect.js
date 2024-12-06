@@ -4,7 +4,8 @@ class ControlModeSelect {
     }
   
     init() {
-      //
+      // Mark state starting time
+      this.startTime = millis();
     }
   
     update() {
@@ -66,7 +67,7 @@ class ControlModeSelect {
       } else if (input === 'D') {
         game.controlMode = 'RobotWithoutHands';
       } else if (input === ' ') {
-        if (game.controlMode != null) {
+        if (game.controlMode != null && this.startTime - millis() > stateBufferTime) {
           gameStateManager.changeState('ConfigMenu');
           globalBroadcastSend = {
               x: 0,

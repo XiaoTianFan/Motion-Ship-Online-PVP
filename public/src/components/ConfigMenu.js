@@ -7,6 +7,9 @@ class ConfigMenu {
   }
 
   init() {
+    // Mark state starting time
+    this.startTime = millis();
+
     if (game.controlMode === 'Humanity') {
       // Initializes the video capture and hide it
       video = createCapture(VIDEO);
@@ -176,10 +179,12 @@ class ConfigMenu {
     } else if (input === 'd') {
       this.selectedBackground = 'background4';
     } else if (input === 'keyPressed') {
-      if (game.instructionShowed === true) {
-        gameStateManager.changeState('WaitForPlayer');
-      } else {
-        gameStateManager.changeState('Instruction');
+      if (this.startTime - millis() > stateBufferTime) {
+        if (game.instructionShowed === true) {
+          gameStateManager.changeState('WaitForPlayer');
+        } else {
+          gameStateManager.changeState('Instruction');
+        }
       }
     } 
     console.log('Config changed!');

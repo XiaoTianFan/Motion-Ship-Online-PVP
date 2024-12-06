@@ -8,6 +8,9 @@ class EndScreen {
   }
 
   init() {
+    // Mark state starting time
+    this.startTime = millis();
+
     globalBroadcastSend = {
       x: 0,
       y: 0,
@@ -116,7 +119,9 @@ class EndScreen {
       } else if (input === 'C' || input === 'keyPressed') { // Reconfigure
         gameStateManager.changeState('ConfigMenu');
       } else if (input === ' ') {
-        gameStateManager.changeState('WaitForPlayer');
+        if (this.startTime - millis() > stateBufferTime) {
+          gameStateManager.changeState('WaitForPlayer');
+        }
       }
     }
   }

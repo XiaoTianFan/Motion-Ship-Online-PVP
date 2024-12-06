@@ -149,7 +149,7 @@ class ComputerPlayer extends Player {
   
     simulateFire() {
       let currentTime = millis();
-      if (currentTime - this.bornTime > 2000) {
+      if (currentTime - this.bornTime > stateBufferTime) {
         console.log(`[AI][FIRE] Simulating space key press for firing laser.`);
         // Simulate pressing the space key
         game.aiKeysPressed.space = true;

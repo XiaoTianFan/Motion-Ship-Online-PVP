@@ -4,7 +4,13 @@ class Instruction {
   }
 
   init() {
+    // Mark state starting time
+    this.startTime = millis();
+
+    // flag for already showing the instruction
     game.instructionShowed = true;
+
+    // Switch instruction to display based on the control mode
     if (game.controlMode === 'Humanity') {
       this.instructions = "=========CENTER YOUR FACE=========\n\nCommands\n\nHead Motion : Spaceship Direction\nSPACE : Fire Laser\nX : Tactic Engine (One Time)\nQ : Give Up Current Mission\n\n\nGame Objective\n\n1. Destroy Your Enemy\n2. Avoid Clashing With Meteoroids\n\n\nPress SPACE To Start";
     } else if (game.controlMode === 'Android') {
@@ -69,7 +75,7 @@ class Instruction {
   }
 
   handleInput(input) {
-    if (input === 'keyPressed') {
+    if (input === 'keyPressed' && this.startTime - millis() > stateBufferTime) {
         gameStateManager.changeState('WaitForPlayer');
     }
   }

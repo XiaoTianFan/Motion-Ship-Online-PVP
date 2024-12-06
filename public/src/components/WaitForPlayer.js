@@ -5,6 +5,10 @@ class WaitForPlayer {
     }
   
     init() {
+      // Mark state starting time
+      this.startTime = millis();
+
+      // If control mode is robot then set ready
       if (game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') {
         this.ready = true;
         this.instructions = "=========AI MODE ON=========\n\nWaiting For The Other Player\n\nYou Are Ready";
@@ -77,7 +81,7 @@ class WaitForPlayer {
     }
   
     handleInput(input) {
-      if (input === ' ') {
+      if (input === ' ' && this.startTime - millis() > stateBufferTime) {
         this.instructions = "=========CENTER YOUR FACE=========\n\nWaiting For The Other Player\n\nYou Are Ready";
         this.ready = true;
         globalBroadcastSend = {

@@ -17,6 +17,7 @@ let gamingZone = {
   width: 0,
   height: 0
 };
+let stateBufferTime = 2000;
 let ComputerDifficulty = 3; // 1-10, The higher the faster computer reaction time
 
 // Global variables for arduino communication
