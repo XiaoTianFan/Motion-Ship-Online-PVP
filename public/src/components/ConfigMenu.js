@@ -121,7 +121,7 @@ class ConfigMenu {
     textFont(assets.fonts.ps2p);
     fill(255);
     textSize(windowWidth / 42);
-    text("Press Keys to Customize Your Mission", 0, -height / 30 * 2);
+    text("Press Keyboard to Customize Your Mission", 0, -height / 30 * 2);
 
     // Spaceship Selection
     textSize(windowWidth / 32);

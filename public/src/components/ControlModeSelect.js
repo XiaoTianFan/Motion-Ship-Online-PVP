@@ -35,7 +35,7 @@ class ControlModeSelect {
       textFont(assets.fonts.ps2p);
       fill(255);
       textSize(windowWidth / 42);
-      text("Select Your Control Mode With Keyboard", 0, height / 30 * -2);
+      text("Select Your Control Mode (Press Keyboard)", 0, height / 30 * -2);
       textSize(windowWidth / 46);
       // Display control options
       fill(game.controlMode === 'Humanity' ? 'yellow' : 'white');

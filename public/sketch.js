@@ -237,6 +237,8 @@ function keyPressed() {
       gameStateManager.handleInput('B');
     } else if (key === 'c') {
       gameStateManager.handleInput('C');
+    } else if (key === 'd') {
+      gameStateManager.handleInput('D');
     } else if (key === ' ') {
       gameStateManager.handleInput(' ');
     }
