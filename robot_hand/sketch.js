@@ -3,7 +3,8 @@
 */
 
 // Array to hold current angles of each finger
-let fingerAngles = [0, 0, 0, 0, 0, 0]; // Index, Middle, Ring, Pinky, Index2, Ring2
+let fingerAngles = [0, 0, 0, 0, 40, 30]; // Index, Middle, Ring, Pinky, Index2, Ring2
+// [30, 60, 70, 70, 90, 60] angles of fingers when bent
 
 // Finger Names
 const fingerNames = ["Index", "Middle", "Ring", "Pinky", "Index2", "Ring2"];
@@ -19,7 +20,7 @@ let sliders = [];
 let currentMode = 'interactive';
 
 // Automatic Bending Variables
-const bendInterval = 2000; // Time between bends (milliseconds)
+const bendInterval = 500; // Time between bends (milliseconds)
 let currentFinger = 0; // Index of the current finger to bend
 let lastBendTime = 0;
 
@@ -144,7 +145,7 @@ function handleAutomaticMode() {
   
   if (currentTime - lastBendTime > bendInterval) {
     // Bend Current Finger
-    fingerAngles[currentFinger] = 90; // Bend to 90 degrees
+    fingerAngles[currentFinger] = 30; // Bend to 90 degrees
     sendAngles();
     
     // Schedule Release
@@ -179,11 +180,11 @@ function bendFinger(fingerIndex) {
   fingerAngles[fingerIndex] = bendAngle;
   sendAngles();
   
-  // Release after 0.2 second
+  // Release after 1 second
   setTimeout(() => {
     fingerAngles[fingerIndex] = releaseAngle;
     sendAngles();
-  }, 200);
+  }, 500);
 }
 
 // Send Current Angles to Arduino via Serial
@@ -223,16 +224,12 @@ Servo indexServo2;
 Servo ringServo2;
 
 // Define servo pins
-const int indexPin = 2;
-const int middlePin = 3;
-const int ringPin = 4;
-const int pinkyPin = 5;
-const int indexPin2 = 6;
-const int ringPin2 = 7;
-
-// Define LED pins
-const int LEDPins[] = {8, 9, 10, 11, 12, 13};
-// indexLEDPin, middleLEDPin, ringLEDPin, pinkyLEDPin, indexLEDPin2, ringLEDPin2
+const int indexPin = 3;
+const int middlePin = 4;
+const int ringPin = 5;
+const int pinkyPin = 6;
+const int indexPin2 = 7;
+const int ringPin2 = 8;
 
 // Array to hold servo objects for easy access
 Servo servos[6];
@@ -242,7 +239,7 @@ const int ledPin = LED_BUILTIN;
 
 void setup() {
   // Initialize serial communication
-  Serial.begin(115200);
+  Serial.begin(9600);
   
   // Attach servos to their respective pins
   servos[0].attach(indexPin);
@@ -251,14 +248,6 @@ void setup() {
   servos[3].attach(pinkyPin);
   servos[4].attach(indexPin2);
   servos[5].attach(ringPin2);
-
-  // Set LED pins to output mode
-  pinMode(8, OUTPUT);
-  pinMode(9, OUTPUT);
-  pinMode(10, OUTPUT);
-  pinMode(11, OUTPUT);
-  pinMode(12, OUTPUT);
-  pinMode(13, OUTPUT);
   
   // Initialize all servos to 0 degrees (open position)
   for(int i = 0; i < 6; i++) {
@@ -282,7 +271,7 @@ void setup() {
 void loop() {
   // Check if data is available from p5.js
   while (Serial.available()) {
-    // digitalWrite(ledPin, HIGH); // LED on while receiving data
+    digitalWrite(ledPin, HIGH); // LED on while receiving data
     
     // Read the incoming line
     String data = Serial.readStringUntil('\n');
@@ -304,10 +293,10 @@ void loop() {
     // Update servo positions
     for(int i = 0; i < 6; i++) {
       servos[i].write(angles[i]); // Set servo to desired angle
-      digitalWrite(LEDPins[i], angles[i] != 0? HIGH : LOW); // Light the LED accordingly
-    } 
+    }
     
-    // Echo back the angles
+    // Send back current sensor readings or status if needed
+    // For now, echo back the angles
     Serial.print(angles[0]);
     for(int i = 1; i < 6; i++) {
       Serial.print(",");
@@ -315,7 +304,7 @@ void loop() {
     }
     Serial.println();
     
-    // digitalWrite(ledPin, LOW); // Turn off LED after processing
+    digitalWrite(ledPin, LOW); // Turn off LED after processing
   }
 }
 */

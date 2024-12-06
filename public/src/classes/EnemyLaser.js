@@ -28,7 +28,7 @@ class EnemyLaser {
 
   checkCollision() {
     if (CollisionDetector.checkSphereCollision(this, game.player)) {
-      game.player.takeDamage(5);
+      game.player.takeDamage(0);
       this.toDelete = true;
     }
   }

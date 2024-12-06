@@ -21,8 +21,10 @@ let ComputerDifficulty = 3; // 1-10, The higher the faster computer reaction tim
 
 // Global variables for arduino communication
 // Array to hold current angles of each finger
-let fingerAngles = [0, 0, 0, 0, 0, 0];
+let fingerAngles = [0, 15, 20, 20, 60, 30];
+let fingerDefaultAngles = [0, 15, 20, 20, 60, 30];
 // LEFT: Index, Middle, Ring, Pinky; RIGHT: Index, Middle
+// [30, 50, 50, 60, 90, 60]; when bent
 
 // A global game object to track overall game state and instances
 let game = {
@@ -182,6 +184,9 @@ function setup() {
   } else {
     console.log('Assets successfully loaded!');
   }
+
+  // Initialize robot hand controller
+  game.robotHandController = new RobotHandController();
 
   // Initialize Sound Manager with loaded sounds
   soundManager = new SoundManager();

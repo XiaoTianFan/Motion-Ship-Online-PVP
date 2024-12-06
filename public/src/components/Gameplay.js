@@ -14,9 +14,6 @@ class Gameplay {
     // Reset game result
     game.gameWL = null;
 
-    // Initialize robot hand controller
-    game.robotHandController = new RobotHandController();
-
     // Initialize player with selected spaceship 
     let selectedShip = configMenu.selectedShip || 'playerShip1';
     let playerModel = assets.models[selectedShip];
