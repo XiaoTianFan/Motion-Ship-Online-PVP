@@ -20,13 +20,12 @@ Before running the project, ensure that dependencies are installed correctly and
 1. **Install Node.js**:
    - Download and install Node.js from the [official website](https://nodejs.org/).
 
-2. **Install Dependencies**:
+2. **Install Dependencies and Generate Certificates**:
+   - Try ```install_dependencies.bat```, otherwise the following.
    ```bash
    npm init -y
    npm install express socket.io
    ```
-
-3. **Install mkcert and Generate Certificates**:
    - If you're using Windows, you can install mkcert via Chocolatey:
    ```bash
    choco install mkcert
