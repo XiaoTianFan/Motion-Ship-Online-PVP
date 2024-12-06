@@ -63,7 +63,8 @@ class ControlModeSelect {
         game.controlMode = 'Android';
       } else if (input === 'C') {
         game.controlMode = 'Robot';
-        // gameStateManager.changeState('ConfigMenu');
+      } else if (input === 'D') {
+        game.controlMode = 'RobotWithoutHands';
       } else if (input === ' ') {
         if (game.controlMode != null) {
           gameStateManager.changeState('ConfigMenu');

@@ -5,9 +5,9 @@ class WaitForPlayer {
     }
   
     init() {
-      if (game.controlMode === 'Robot') {
+      if (game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') {
         this.ready = true;
-        this.instructions = "=========CENTER YOUR FACE=========\n\nWaiting For The Other Player\n\nYou Are Ready";
+        this.instructions = "=========AI MODE ON=========\n\nWaiting For The Other Player\n\nYou Are Ready";
       } else {
         this.ready = false;
       }
@@ -48,7 +48,7 @@ class WaitForPlayer {
     render() {
       background(10);
       
-      if (game.controlMode != 'Robot') {
+      if (game.controlMode != 'Robot' && game.controlMode != 'RobotWithoutHands') {
         push();
         // Code of this for loop comes from https://editor.p5js.org/ml5/sketches/lCurUW1TT
         // Draw all the tracked face points

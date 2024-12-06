@@ -29,7 +29,7 @@ class ConfigMenu {
     faceTracker.init();
 
     // Initialize default selections 
-    if (game.controlMode === 'Robot') {
+    if (game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') {
       this.selectedShip = random(['playerShip1', 'playerShip2']);
     }
     else {
@@ -75,7 +75,7 @@ class ConfigMenu {
     this.backgroundTexture = assets.textures[this.selectedBackground];
     this.background.texture = this.backgroundTexture;
 
-    if ((game.controlMode === 'Robot') && (globalBroadcastGet.currentComponent === 'Instruction' || globalBroadcastGet.currentComponent === 'WaitForPlayer')) {
+    if ((game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') && (globalBroadcastGet.currentComponent === 'Instruction' || globalBroadcastGet.currentComponent === 'WaitForPlayer')) {
       gameStateManager.changeState('WaitForPlayer');
     }
   }

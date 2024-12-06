@@ -22,7 +22,7 @@ class Gameplay {
     // And based on control mode
     if (game.controlMode === 'Humanity' || game.controlMode === 'Android' ) {
       game.player = new Player(playerModel, playerTexture);
-    } else if (game.controlMode === 'Robot') {
+    } else if (game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') {
       // Set default difficulty and behavior priority
       let difficulty = ComputerDifficulty; // Example default
       let behaviorPriority = 'attack'; // 'survival' or 'attack'
@@ -134,7 +134,7 @@ class Gameplay {
 
       // Update background
       this.background.update(game.cursor.x, game.cursor.y);
-    } else if (game.controlMode === 'Robot') {
+    } else if (game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') {
       
 
       // Update AI player
@@ -144,8 +144,10 @@ class Gameplay {
 
       // Apply AI key presses to movement and robot hand
       this.handleAIKeyPresses();
-      game.robotHandController.update();
-
+      if (game.controlMode === 'Robot') {
+        game.robotHandController.update();
+      }
+    
       // Updart background
       this.background.update(game.cursor.x, game.cursor.y);
     }
@@ -223,7 +225,7 @@ class Gameplay {
     this.hud.update(game.player.energy, this.score);
 
     // Syn when opponent manually quits the game
-    if ((game.controlMode === 'Robot') && (globalBroadcastGet.currentComponent === 'EndScreen')) {
+    if ((game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') && (globalBroadcastGet.currentComponent === 'EndScreen')) {
       gameStateManager.changeState('EndScreen');
       console.log('Game ends!');
     }

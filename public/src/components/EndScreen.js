@@ -77,7 +77,7 @@ class EndScreen {
       currentComponent: 'EndScreen'
     }
 
-    if (game.controlMode === 'Robot') {
+    if (game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') {
       if (globalBroadcastGet.currentComponent === 'ConfigMenu') {
         gameStateManager.changeState('ConfigMenu');
       } else if (globalBroadcastGet.currentComponent === 'WaitForPlayer') {
