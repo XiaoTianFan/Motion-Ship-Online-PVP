@@ -4,7 +4,6 @@ class EndScreen {
     this.score = 0;
     this.prompt = "Press H to Home Page\nPress P to Replan Your Mission\nPress SPACE to Restart Your Mission";
     this.gameData = dataManager; // Reference to DataManager
-    this.initTime = millis();
   }
 
   init() {
@@ -33,6 +32,14 @@ class EndScreen {
     // reset laser count
     game.enemyLaserFired = 0;
     game.player.laserFired = 0;
+
+    // Reset AI key presses 
+    game.aiKeysPressed.w = false;
+    game.aiKeysPressed.a = false;
+    game.aiKeysPressed.s = false;
+    game.aiKeysPressed.d = false;
+    game.aiKeysPressed.space = false;
+    game.aiKeysPressed.x = false;
 
     this.score = game.score;
     // Update high score if necessary
@@ -113,15 +120,13 @@ class EndScreen {
 
   handleInput(input) {
     let currentTime = millis();
-    if (currentTime - this.initTime > 500) {
+    if (currentTime - this.startTime > stateBufferTime + 500) {
       if (input === 'H') { // Restart
         gameStateManager.changeState('StartScreen');
       } else if (input === 'C' || input === 'keyPressed') { // Reconfigure
         gameStateManager.changeState('ConfigMenu');
       } else if (input === ' ') {
-        if (this.startTime - millis() > stateBufferTime) {
-          gameStateManager.changeState('WaitForPlayer');
-        }
+        gameStateManager.changeState('WaitForPlayer');
       }
     }
   }

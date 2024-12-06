@@ -4,7 +4,7 @@ class EnemyShip {
     this.texture = texture;
     this.x = 0;
     this.y = 0;
-    this.z = -1800 // Start off-screen
+    this.z = -1200 // Start off-screen
     this.rotationX = 0;
     this.rotationY = 0;
     this.rotationZ = 0;

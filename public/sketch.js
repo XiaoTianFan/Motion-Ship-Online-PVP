@@ -26,6 +26,7 @@ let fingerAngles = [0, 15, 20, 20, 60, 30];
 let fingerDefaultAngles = [0, 15, 20, 20, 60, 30];
 // LEFT: Index, Middle, Ring, Pinky; RIGHT: Index, Middle
 // [30, 50, 50, 60, 90, 60]; when bent
+let serialFlag = false;
 
 // A global game object to track overall game state and instances
 let game = {
@@ -102,6 +103,7 @@ let video;
 let faces;
 let predictedWord;
 let faceMesh;
+let faceMeshFlag = false;
 let options = { maxFaces: 1, refineLandmarks: false, flipHorizontal: true };
 
 // Preload function to load all assets before setup() and initialize face model

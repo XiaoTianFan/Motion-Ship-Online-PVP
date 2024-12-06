@@ -19,9 +19,6 @@ class WaitForPlayer {
   
     update() {
       console.log(globalBroadcastGet.readyToPlay, this.ready);
-      if (game.controlMode === 'Robot') {
-        game.robotHandController.update();
-      }
       globalBroadcastSend = {
         x: 0,
         y: 0,
@@ -81,7 +78,7 @@ class WaitForPlayer {
     }
   
     handleInput(input) {
-      if (input === ' ' && this.startTime - millis() > stateBufferTime) {
+      if (input === ' ' && millis() - this.startTime > stateBufferTime) {
         this.instructions = "=========CENTER YOUR FACE=========\n\nWaiting For The Other Player\n\nYou Are Ready";
         this.ready = true;
         globalBroadcastSend = {

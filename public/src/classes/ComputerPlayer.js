@@ -12,12 +12,18 @@ class ComputerPlayer extends Player {
       this.currentAction = null;
       this.firingRange = 100; // Define firing range threshold
       this.bornTime = millis();
+      this.difficultyTime = frameCount;
     }
   
     updateAI() {
+      // Set local enemy target
       this.enemy = game.enemy; 
 
-      let currentTime = millis();
+      // Count in frame, 1200 = 20s, to increase AI difficulty
+      if (frameCount - this.difficultyTime > 1200) {
+        this.difficulty ++;
+      }
+
       if (currentTime - this.lastActionTime > this.actionCooldown) {
         console.log(`[AI][${this.behaviorPriority.toUpperCase()}] Deciding next action...`);
         this.decideNextAction();
@@ -107,6 +113,7 @@ class ComputerPlayer extends Player {
       // 3. Utilize tactic engine if advantageous
       if (this.shouldUseTacticEngineAttack()) {
         console.log(`[AI][DECIDE] Activating tactic engine.`);
+        this.difficulty ++;
         this.queueAction('activateTacticEngine');
       }
     }

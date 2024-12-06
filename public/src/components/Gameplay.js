@@ -20,7 +20,7 @@ class Gameplay {
     let playerTexture = assets.textures[selectedShip];
 
     // And based on control mode
-    if (game.controlMode === 'Humanity' || game.controlMode === 'Android' ) {
+    if (game.controlMode === 'Humanity' || game.controlMode === 'Android') {
       game.player = new Player(playerModel, playerTexture);
     } else if (game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') {
       // Set default difficulty and behavior priority
@@ -276,7 +276,7 @@ class Gameplay {
   }
 
   resetAIKeys() {
-    // Reset AI key presses at the start of each frame
+    // Reset AI key presses
     game.aiKeysPressed.w = false;
     game.aiKeysPressed.a = false;
     game.aiKeysPressed.s = false;

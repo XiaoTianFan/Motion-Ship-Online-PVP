@@ -35,7 +35,7 @@ class ObjectSpawner {
 
   spawnObject() {
     let rand = random();
-    if (rand < 0.5) { // 40% Meteoroid
+    if (rand < 0.7) { // 70% Meteoroid
       let meteoroidModel = random(['meteoroid1', 'meteoroid2', 'meteoroid3', 'meteoroid4']);
       let meteoroid = new Meteoroid(assets.models[meteoroidModel], assets.textures.meteoroid);
       game.objects.push(meteoroid);

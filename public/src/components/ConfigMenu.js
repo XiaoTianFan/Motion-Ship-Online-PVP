@@ -10,17 +10,19 @@ class ConfigMenu {
     // Mark state starting time
     this.startTime = millis();
 
-    if (game.controlMode === 'Humanity') {
+    if (game.controlMode === 'Humanity' && faceMeshFlag === false) {
       // Initializes the video capture and hide it
       video = createCapture(VIDEO);
       video.size(640, 480);
       video.hide();
       // Start detecting faces from the webcam video
       faceMesh.detectStart(video, gotFaces);
-    } else if (game.controlMode === 'Robot') {
+      faceMeshFlag = true;
+    } else if (game.controlMode === 'Robot' && serialFlag === false) {
       // Initialize or Re-initialize Serial Connection
       setUpSerial(9600).then(() => {
       serialActive = true;
+      serialFlag = true;
       console.log("Serial connection established.");
     }).catch(err => {
       console.error("Serial connection failed:", err);
@@ -179,7 +181,7 @@ class ConfigMenu {
     } else if (input === 'd') {
       this.selectedBackground = 'background4';
     } else if (input === 'keyPressed') {
-      if (this.startTime - millis() > stateBufferTime) {
+      if (millis() - this.startTime > stateBufferTime) {
         if (game.instructionShowed === true) {
           gameStateManager.changeState('WaitForPlayer');
         } else {

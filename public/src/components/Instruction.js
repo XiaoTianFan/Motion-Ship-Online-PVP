@@ -75,7 +75,7 @@ class Instruction {
   }
 
   handleInput(input) {
-    if (input === 'keyPressed' && this.startTime - millis() > stateBufferTime) {
+    if (input === 'keyPressed' && millis() - this.startTime > stateBufferTime) {
         gameStateManager.changeState('WaitForPlayer');
     }
   }
