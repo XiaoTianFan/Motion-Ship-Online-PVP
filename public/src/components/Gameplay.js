@@ -79,6 +79,8 @@ class Gameplay {
     }
     
     console.log('Gameplay initiated!');
+
+    globalNotification.update('Destroy Your Enemy!');
   }
 
   update() {

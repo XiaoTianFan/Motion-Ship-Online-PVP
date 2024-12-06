@@ -180,9 +180,9 @@ class Player {
       this.tacticEngineOn = true;
       this.tacticEngineUsed = true;
       if (this.model === assets.models.playerShip2) {
-        globalNotification.update('Infinite Energy For 15 SEC!');
+        globalNotification.update('Tactic Engine ON!\nInfinite Energy For 15 SEC!');
       } else {
-        globalNotification.update('Indestructible For 15 SEC!');
+        globalNotification.update('Tactic Engine ON!\nIndestructible For 15 SEC!');
       }
     } else {
       console.log('Tactic Engine Already Used!');

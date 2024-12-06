@@ -133,9 +133,9 @@ class EnemyShip {
       this.tacticEngineOn = true;
       this.tacticEngineUsed = true;
       if (this.model === assets.models.playerShip2) {
-        globalNotification.update('Enemy Infinite Energy For 15 SEC!');
+        globalNotification.update('Enemy Tactic Engine ON!\nInfinite Energy For 15 SEC!');
       } else {
-        globalNotification.update('Enemy Indestructible For 15 SEC!');
+        globalNotification.update('Enemy Tactic Engine ON!\nIndestructible For 15 SEC!');
       }
     } else {
       console.log('Enemy Tactic Engine Already Used!');
