@@ -35,8 +35,8 @@ Before running the project, ensure that dependencies are installed correctly and
    ```bash
    mkcert -install
    mkcert <your_local_IP> localhost 127.0.0.1 ::1
-   mv <localIP>+2.pem server.pem
-   mv <localIP>+2-key.pem server-key.pem
+   mv <localIP>+3.pem server.pem
+   mv <localIP>+3-key.pem server-key.pem
    mkdir certs
    mv server.pem certs/
    mv server-key.pem certs/
@@ -59,11 +59,11 @@ Alternatively, you can double-click the `run_local_server.bat` file.
 ## Mode Configuration
 
 - **PVP Mode**:
-  - Both players should select the default control mode **"Motion"** on the control mode selection page.
-
+  - Both players should select the default control mode **"A"** (Motion) or **"B"** (WASD for debug) on the control mode selection page.
 - **PVE Mode**:
-  - The player should select the default control mode **"Motion"** on the control mode selection page.
-  - The AI client should press **'C'** (AI with physical installation) or **'D'** (AI without physical installation) on the control mode selection page.
+  - The player should select the default control mode **"A"** (Motion) or **"B"** (WASD for debug) on the control mode selection page.
+  - The AI client should press **'C'** (AI with physical installation) or **'D'** (AI without physical installation) on the control mode selection page. 
+  - The AI difficulty can be controlled by ```ComputerDifficulty``` (1-10) in ```./public/sketch.js```
 
 ---
 
