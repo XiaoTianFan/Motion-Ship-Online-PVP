@@ -77,4 +77,6 @@ This project includes a physical installation in one of the PVE modes (when 'C' 
 
 ---
 
-Feel free to reach out if you have any questions or need further assistance!
+## License
+
+This project is licensed under the [MIT License]. 
