@@ -24,10 +24,10 @@ class ComputerPlayer extends Player {
         this.difficulty ++;
       }
 
-      if (currentTime - this.lastActionTime > this.actionCooldown) {
+      if (millis() - this.lastActionTime > this.actionCooldown) {
         console.log(`[AI][${this.behaviorPriority.toUpperCase()}] Deciding next action...`);
         this.decideNextAction();
-        this.lastActionTime = currentTime;
+        this.lastActionTime = millis();
       }
   
       // Execute actions from the queue
@@ -155,8 +155,7 @@ class ComputerPlayer extends Player {
     }
   
     simulateFire() {
-      let currentTime = millis();
-      if (currentTime - this.bornTime > stateBufferTime) {
+      if (millis() - this.bornTime > stateBufferTime) {
         console.log(`[AI][FIRE] Simulating space key press for firing laser.`);
         // Simulate pressing the space key
         game.aiKeysPressed.space = true;

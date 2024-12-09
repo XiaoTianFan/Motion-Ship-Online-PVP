@@ -8,7 +8,7 @@ class Instruction {
     this.startTime = millis();
 
     // flag for already showing the instruction
-    game.instructionShowed = true;
+    // game.instructionShowed = true;
 
     // Switch instruction to display based on the control mode
     if (game.controlMode === 'Humanity') {

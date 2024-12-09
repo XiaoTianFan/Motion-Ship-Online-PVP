@@ -20,7 +20,7 @@ class RobotHandController {
       let currentTime = millis();
 
       const keys = ['w', 'a', 's', 'd', 'space', 'x'];
-      const angles = [30, 50, 50, 60, 75, 70]; // Different angles for each key
+      const angles = [30, 50, 50, 55, 70, 70]; // Different angles for each key
     
       for (let i = 0; i < 6; i++) {
         if (game.aiKeysPressed[keys[i]] === true) {

@@ -36,7 +36,7 @@ class ControlModeSelect {
       textFont(assets.fonts.ps2p);
       fill(255);
       textSize(windowWidth / 42);
-      text("Select Your Control Mode (Press Keyboard)", 0, height / 30 * -2);
+      text("Confirm Your Control Mode", 0, height / 30 * -2);
       textSize(windowWidth / 46);
       // Display control options
       fill(game.controlMode === 'Humanity' ? 'yellow' : 'white');
@@ -50,7 +50,7 @@ class ControlModeSelect {
 
       fill(255);
       textSize(windowWidth / 48);
-      text("Press SPACE To Config Your Mission", 0, height / 30 * 2);
+      text("Press SPACE To Proceed Config Your Mission", 0, height / 30 * 2);
       pop();
 
       // Render Notification

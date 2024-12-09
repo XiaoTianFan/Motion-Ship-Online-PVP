@@ -125,12 +125,12 @@ class ConfigMenu {
     textAlign(CENTER, CENTER);
     textFont(assets.fonts.ps2p);
     fill(255);
-    textSize(windowWidth / 42);
-    text("Press Keyboard to Customize Your Mission", 0, -height / 30 * 2);
+    textSize(windowWidth / 40);
+    text("Press Keys to Customize Your Mission", 0, -height / 30 * 2);
 
     // Spaceship Selection
-    textSize(windowWidth / 32);
-    text("Prepare Your Spaceship", 0, height / 30 * 2);
+    textSize(windowWidth / 40);
+    text("Press 1 or 2 To Prepare Your Spaceship", 0, height / 30 * 2);
 
     textSize(windowWidth / 46);
     // Display spaceship options (for simplicity, using text prompts)
@@ -141,8 +141,8 @@ class ConfigMenu {
 
     // Background Selection
     fill(255);
-    textSize(windowWidth / 32);
-    text("Target Galaxy", 0, height / 30 * 10);
+    textSize(windowWidth / 40);
+    text("Press A/B/C/D To Select The Target Galaxy", 0, height / 30 * 10);
 
     textSize(windowWidth / 46);
     // Display background options
