@@ -13,7 +13,7 @@ class Player {
     this.health = 100;
     this.energy = 100;
     this.maxEnergy = 100;
-    this.energyRegenRate = 0.1; // Energy regenerates over time
+    this.energyRegenRate = 0.25; // Energy regenerates over time
     this.laserCooldown = 100; // milliseconds
     this.lastLaserTime = 0;
     this.colliderRadius = 40; // Example radius for collision detection

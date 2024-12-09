@@ -1,6 +1,6 @@
 class WaitForPlayer {
     constructor() {
-      this.instructions = "=========CENTER YOUR FACE=========\n\nWaiting For The Other Player\n\nPress SPACE To Indicate You Are Ready";
+      this.instructions = "=========CENTER YOUR FACE=========\n\nBuilding The Universe\n\nPress SPACE To Indicate You Are Ready";
       this.ready = false;
     }
   
@@ -11,7 +11,7 @@ class WaitForPlayer {
       // If control mode is robot then set ready
       if (game.controlMode === 'Robot' || game.controlMode === 'RobotWithoutHands') {
         this.ready = true;
-        this.instructions = "=========AI MODE ON=========\n\nWaiting For The Other Player\n\nYou Are Ready";
+        this.instructions = "=========AI MODE ON=========\n\nBuilding The Universe\n\nYou Are Ready";
       } else {
         this.ready = false;
       }
