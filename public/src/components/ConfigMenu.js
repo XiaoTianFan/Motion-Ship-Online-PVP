@@ -141,7 +141,7 @@ class ConfigMenu {
 
     // Background Selection
     fill(255);
-    textSize(windowWidth / 40);
+    textSize(windowWidth / 45);
     text("Press A/B/C/D To Select The Target Galaxy", 0, height / 30 * 10);
 
     textSize(windowWidth / 46);

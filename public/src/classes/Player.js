@@ -13,7 +13,7 @@ class Player {
     this.health = 100;
     this.energy = 100;
     this.maxEnergy = 100;
-    this.energyRegenRate = 0.25; // Energy regenerates over time
+    this.energyRegenRate = 0.175; // Energy regenerates over time
     this.laserCooldown = 100; // milliseconds
     this.lastLaserTime = 0;
     this.colliderRadius = 40; // Example radius for collision detection
@@ -161,11 +161,14 @@ class Player {
     let currentTime = millis();
     if (this.canFire() && (currentTime - this.bornTime > 2000)) {
       this.energy -= 5; // Energy cost per laser
-      this.lastLaserTime = millis();
+      if (this.energy < 6) {
+        globalNotification.update('Ran Out Of Energy!');
+      }
       // Play laser sound
       soundManager.playSound('laserFire');
       // update laserfired num
       this.laserFired ++;
+      this.lastLaserTime = millis();
       // Create and return a new LaserBeam instancex  
       return new LaserBeam(this.x, this.y, this.z);
     }
